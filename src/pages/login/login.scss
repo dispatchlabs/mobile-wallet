@@ -1,0 +1,21 @@
+page-login {
+  ion-content {
+    background-image: url('../../assets/imgs/rainbow-bg.png');
+  }
+
+  .scroll-content {
+    padding: 20px;
+  }
+
+  .logo{
+    text-align: center;
+
+    img {
+      max-width: 60%;
+    }
+  }
+
+  h3 {
+    color: #FFF;
+  }
+}
