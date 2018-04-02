@@ -1,18 +1,64 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Home</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <button ion-button menuToggle color="secondary">
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-segment color="secondary" padding>
+            <ion-segment-button value="Paid">
+                All
+            </ion-segment-button>
+            <ion-segment-button value="Free">
+                Sent
+            </ion-segment-button>
+            <ion-segment-button value="Top">
+                Received
+            </ion-segment-button>
+        </ion-segment>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="sendTokens()" color="secondary">
+                <ion-icon name="send"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h3>Ionic Menu Starter</h3>
-
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
-
-  <button ion-button secondary menuToggle>Toggle Menu</button>
+    <ion-list no-border>
+        <button ion-item (click)="transactionDetails()">
+            <ion-icon name="arrow-dropup-circle" item-start color="primary"></ion-icon>
+            <ion-label>
+                <ion-grid>
+                    <ion-row padding-bottom>
+                        <span class="wrap-text">To: 52e68ed15efc5ee4ea8ab71a4d844e055785576f</span>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            Amount: 20 tokens
+                        </ion-col>
+                        <ion-col text-right>
+                            <span class="grey-text">01/01/1970</span>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-label>
+        </button>
+        <ion-item>
+            <ion-icon name="arrow-dropdown-circle" item-start color="purple"></ion-icon>
+            <ion-label>
+                <ion-grid>
+                    <ion-row padding-bottom>
+                        <span class="wrap-text">From: 52e68ed15efc5ee4ea8ab71a4d844e055785576f</span>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            Amount: 20 tokens
+                        </ion-col>
+                        <ion-col text-right>
+                            <span class="grey-text">01/01/1970</span>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-label>
+        </ion-item>
+    </ion-list>
 </ion-content>
