@@ -36,6 +36,10 @@ ion-header .bar-button-default-md, .bar-button-clear-md-default, .bar-button-md-
   color: #999;
 }
 
+.flip-v {
+  transform: scaleY(-1);
+}
+
 .mt0 {
   margin-top: 0 !important;
 }
