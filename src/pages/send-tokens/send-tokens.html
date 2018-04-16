@@ -18,14 +18,14 @@
 
         <ion-item>
             <ion-label floating>To</ion-label>
-            <ion-input type="text"></ion-input>
+            <ion-input [value]="to" type="text"></ion-input>
         </ion-item>
 
         <ion-item>
             <ion-label floating>Amount</ion-label>
-            <ion-input type="number"></ion-input>
+            <ion-input [value]="tokens" type="number"></ion-input>
         </ion-item>
 
     </ion-list>
-    <button ion-button>Send</button>
+    <button ion-button (click)="send()">Send</button>
 </ion-content>

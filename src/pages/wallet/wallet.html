@@ -14,12 +14,12 @@
 
         <ion-item>
             <ion-label floating>Private Key</ion-label>
-            <ion-input type="text" value="e7181240095e27679bf38e8ad77d37bedb5865b569157b4c14cdb1bebb7c6e2b"></ion-input>
+            <ion-input type="text" [value]="config.defaultAccount.privateKey"></ion-input>
         </ion-item>
 
         <ion-item>
             <ion-label floating>Address</ion-label>
-            <ion-input type="text" value="79db55dd1c8ae495c267bde617f7a9e5d5c67719"></ion-input>
+            <ion-input type="text" [value]="config.defaultAccount.address"></ion-input>
         </ion-item>
 
     </ion-list>
@@ -29,19 +29,15 @@
             <button ion-button>Save</button>
         </ion-col>
         <ion-col>
-            <button ion-button>Generate New Wallet</button>
+            <button ion-button (click)="generateNewAccount()">Generate New Account</button>
         </ion-col>
     </ion-row>
 
     <h3>My Saved Wallets</h3>
     <ion-list radio-group>
-        <ion-item>
-            <ion-label color="dark">79db55dd1c8ae495c267bde617f7a9e5d5c67719</ion-label>
-            <ion-radio value="always" checked></ion-radio>
-        </ion-item>
-        <ion-item>
-            <ion-label color="dark">43f603c04610c87326e88fcd24152406d23da032</ion-label>
-            <ion-radio value="always"></ion-radio>
+        <ion-item *ngFor="let account of config.accounts">
+            <ion-label color="dark">{{account.address}}</ion-label>
+            <ion-radio (click)="accountSelected(account)" [value]="account.address" [checked]="config.defaultAccount.address"></ion-radio>
         </ion-item>
     </ion-list>
 </ion-content>

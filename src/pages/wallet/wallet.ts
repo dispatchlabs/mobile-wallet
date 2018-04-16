@@ -1,5 +1,15 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {Observable} from 'rxjs/Observable';
+import {Config} from '../../store/states/config';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../app/app.state';
+import * as keccak from 'keccak';
+import * as secp256k1 from 'secp256k1';
+import {Account} from '../../store/states/account';
+import {ConfigAction} from '../../store/redcuers/config.reducer';
+
+declare const Buffer;
 
 /**
  * Generated class for the WalletPage page.
@@ -10,16 +20,80 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-wallet',
-  templateUrl: 'wallet.html',
+    selector: 'page-wallet',
+    templateUrl: 'wallet.html',
 })
-export class WalletPage {
+export class WalletPage implements OnInit, OnDestroy {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+    /**
+     * Class level-declarations.
+     */
+    public configState: Observable<Config>;
+    public config: Config;
+    public configSubscription: any;
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletPage');
-  }
+    /**
+     *
+     * @param {NavController} navCtrl
+     * @param {NavParams} navParams
+     * @param {Store<AppState>} store
+     */
+    constructor(public navCtrl: NavController, public navParams: NavParams, private store: Store<AppState>) {
+        this.configState = this.store.select('config');
+        this.configSubscription = this.configState.subscribe((config: Config) => {
+            this.config = config;
+        });
+    }
 
+    /**
+     *
+     */
+    ionViewDidLoad() {
+        console.log('ionViewDidLoad WalletPage');
+    }
+
+    /**
+     *
+     */
+    ngOnInit() {
+
+    }
+
+    /**
+     *
+     */
+    ngOnDestroy() {
+        this.configSubscription.unsubscribe();
+    }
+
+    public accountSelected(account: Account): void {
+        this.config.defaultAccount = account;
+        this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+        console.log(account);
+    }
+
+    /**
+     *
+     */
+    public generateNewAccount(): void {
+        const privateKey = new Buffer(32);
+        do {
+            crypto.getRandomValues(privateKey);
+        } while (!secp256k1.privateKeyVerify(privateKey));
+        const publicKey = secp256k1.publicKeyCreate(privateKey);
+        const hash = keccak('keccak256').update(publicKey).digest();
+        const address = new Buffer(20);
+        for (let i = 0; i < address.length; i++) {
+            address[i] = hash[i + 12];
+        }
+
+        const account: Account = {
+            address: Buffer.from(address).toString('hex'),
+            privateKey: Buffer.from(privateKey).toString('hex'),
+            balance: 0,
+            name: ''
+        };
+        this.config.accounts.push(account);
+        this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+    }
 }

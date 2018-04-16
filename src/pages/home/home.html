@@ -7,10 +7,10 @@
             <!--<ion-segment-button value="Paid">
                 All
             </ion-segment-button>-->
-            <ion-segment-button value="Free">
+            <ion-segment-button value="Free" (click)="viewSent = true">
                 Sent
             </ion-segment-button>
-            <ion-segment-button value="Top">
+            <ion-segment-button value="Top" (click)="viewSent = false">
                 Received
             </ion-segment-button>
         </ion-segment>
@@ -26,7 +26,7 @@
                 <h3 class="my0"><img src="assets/imgs/wallet.svg" class="icon"></h3>
             </ion-col>
             <ion-col text-right padding-right class="ellipsis">
-                <h3 class="font-weight-light my0 ellipsis">79db55dd1c8ae495c267bde617f7a9e5d5c67719</h3>
+                <h3 class="font-weight-light my0 ellipsis">{{config.defaultAccount.address}}</h3>
             </ion-col>
         </ion-row>
         <ion-row>
@@ -41,60 +41,44 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-list no-border>
-        <button ion-item (click)="transactionDetails()">
+    <ion-list no-border *ngIf="viewSent === true">
+        <button ion-item (click)="transactionDetails()" *ngFor="let transaction of fromTransctions">
             <ion-icon name="ios-share-outline" item-start color="primary"></ion-icon>
             <ion-label>
                 <ion-grid>
                     <ion-row padding-bottom>
-                        <span class="wrap-text"><b>To:</b> 52e68ed15efc5ee4ea8ab71a4d844e055785576f</span>
+                        <span class="wrap-text"><b>From:</b> {{transaction.to}}</span>
                     </ion-row>
                     <ion-row>
                         <ion-col no-padding>
-                            <b>20 tokens</b>
+                            <b>{{transaction.time}} tokens</b>
                         </ion-col>
                         <ion-col text-right no-padding>
-                            <span class="grey-text">01/01/1970</span>
+                            <span class="grey-text">{{transaction.time}}</span>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
             </ion-label>
         </button>
-        <ion-item>
-            <ion-icon name="ios-share-outline" class="flip-v" item-start color="purple"></ion-icon>
+    </ion-list>
+    <ion-list no-border *ngIf="viewSent === false">
+        <button ion-item (click)="transactionDetails()" *ngFor="let transaction of toTransactions">
+            <ion-icon name="ios-share-outline" item-start color="primary"></ion-icon>
             <ion-label>
                 <ion-grid>
                     <ion-row padding-bottom>
-                        <span class="wrap-text"><b>From:</b> 52e68ed15efc5ee4ea8ab71a4d844e055785576f</span>
+                        <span class="wrap-text"><b>To:</b> {{transaction.from}}</span>
                     </ion-row>
                     <ion-row>
                         <ion-col no-padding>
-                            <b>20 tokens</b>
+                            <b>{{transaction.value}} tokens</b>
                         </ion-col>
                         <ion-col text-right no-padding>
-                            <span class="grey-text">01/01/1970</span>
+                            <span class="grey-text">{{transaction.time}}</span>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
             </ion-label>
-        </ion-item>
-        <ion-item>
-            <ion-icon name="ios-share-outline" class="flip-v" item-start color="purple"></ion-icon>
-            <ion-label>
-                <ion-grid>
-                    <ion-row padding-bottom>
-                        <span class="wrap-text"><b>From:</b> 52e68ed15efc5ee4ea8ab71a4d844e055785576f</span>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col no-padding>
-                            <b>20 tokens</b>
-                        </ion-col>
-                        <ion-col text-right no-padding>
-                            <span class="grey-text">01/01/1970</span>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-            </ion-label>
-        </ion-item>
+        </button>
     </ion-list>
 </ion-content>
