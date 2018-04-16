@@ -1,12 +1,12 @@
 import {Component, OnDestroy} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
 import * as keccak from 'keccak';
 import * as secp256k1 from 'secp256k1';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../../store/states/config';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../app/app.state';
-import {AppService} from '../../app/app.service';
+import {APP_REFRESH, AppService} from '../../app/app.service';
 
 declare const Buffer;
 
@@ -30,7 +30,7 @@ export class SendTokensPage implements OnDestroy {
     public configState: Observable<Config>;
     public config: Config;
     public configSubscription: any;
-    public to: string;
+    public to = '43f603c04610c87326e88fcd24152406d23da032';
     public tokens: string;
     public id: string;
 
@@ -40,8 +40,9 @@ export class SendTokensPage implements OnDestroy {
      * @param {NavParams} navParams
      * @param {AppService} appService
      * @param {Store<AppState>} store
+     * @param {ToastController} toastController
      */
-    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private store: Store<AppState>) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private store: Store<AppState>, private toastController: ToastController) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
@@ -88,6 +89,7 @@ export class SendTokensPage implements OnDestroy {
         const from = Buffer.from(this.config.defaultAccount.address, 'hex');
         const to = Buffer.from(this.to, 'hex');
         const tokens = this.numberToBuffer(parseInt(this.tokens, 10));
+        console.log(this.tokens);
         const time = this.numberToBuffer(date.getTime());
         const hash = keccak('keccak256').update(Buffer.concat([type, from, to, tokens, time])).digest();
         const signature = secp256k1.sign(hash, Buffer.from(privateKey, 'hex'));
@@ -117,14 +119,13 @@ export class SendTokensPage implements OnDestroy {
                     this.getStatus();
                     return;
                 }
-
-                console.log(response)
-
-                if (response.status === 'OK') {
-                    // TODO: Message "Tokens Transferred" and exit
-                } else {
-                    // TODO: Error message.
-                }
+                this.appService.appEvents.error({type: APP_REFRESH});
+                let toast = this.toastController.create({
+                    message: response.status,
+                    duration: 3000,
+                    position: 'top'
+                });
+                toast.present();
             });
         }, 500);
     }

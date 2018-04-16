@@ -72,7 +72,6 @@ export class WalletPage implements OnInit, OnDestroy {
     public accountSelected(account: Account): void {
         this.config.defaultAccount = account;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
-        console.log(account);
     }
 
     /**

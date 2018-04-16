@@ -18,12 +18,12 @@
 
         <ion-item>
             <ion-label floating>To</ion-label>
-            <ion-input [value]="to" type="text"></ion-input>
+            <ion-input [(ngModel)]="to" type="text"></ion-input>
         </ion-item>
 
         <ion-item>
             <ion-label floating>Amount</ion-label>
-            <ion-input [value]="tokens" type="number"></ion-input>
+            <ion-input [(ngModel)]="tokens" ></ion-input>
         </ion-item>
 
     </ion-list>
