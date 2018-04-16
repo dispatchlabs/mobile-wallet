@@ -65,6 +65,16 @@ export class HomePage implements OnInit, OnDestroy {
 
     /**
      *
+     * @param {number} time
+     * @returns {string}
+     */
+    public getDate(time: number): string {
+        const date = (new Date(time)).toLocaleDateString();
+        return date;
+    }
+
+    /**
+     *
      */
     sendTokens() {
         this.navCtrl.push('SendTokensPage');
