@@ -120,7 +120,7 @@ export class SendTokensPage implements OnDestroy {
                 }
                 this.appService.appEvents.error({type: APP_REFRESH});
                 let toast = this.toastController.create({
-                    message: response.status,
+                    message: 'Tokens Sent',
                     duration: 3000,
                     position: 'top'
                 });

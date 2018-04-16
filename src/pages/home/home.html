@@ -42,11 +42,11 @@
 
 <ion-content padding>
     <ion-list no-border *ngIf="viewSent === true">
-        <button ion-item (click)="transactionDetails()" *ngFor="let transaction of fromTransctions">
+        <button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of fromTransctions">
             <ion-label>
                 <ion-grid>
                     <ion-row padding-bottom>
-                        <span class="wrap-text"><b>From:</b> {{transaction.to}}</span>
+                        <span class="wrap-text"><b>To:</b> {{transaction.to}}</span>
                     </ion-row>
                     <ion-row>
                         <ion-col no-padding>
@@ -61,11 +61,11 @@
         </button>
     </ion-list>
     <ion-list no-border *ngIf="viewSent === false">
-        <button ion-item (click)="transactionDetails()" *ngFor="let transaction of toTransactions">
+        <button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of toTransactions">
             <ion-label>
                 <ion-grid>
                     <ion-row padding-bottom>
-                        <span class="wrap-text"><b>To:</b> {{transaction.from}}</span>
+                        <span class="wrap-text"><b>From:</b> {{transaction.from}}</span>
                     </ion-row>
                     <ion-row>
                         <ion-col no-padding>
