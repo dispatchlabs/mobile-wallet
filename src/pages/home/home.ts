@@ -24,6 +24,7 @@ export class HomePage implements OnInit, OnDestroy {
     public toTransactions: Transaction[];
     public viewSent = false;
     public appEventSubscription: any;
+    public transaction: Transaction;
 
     /**
      *
@@ -65,8 +66,9 @@ export class HomePage implements OnInit, OnDestroy {
 
     /**
      *
+     * @param {Transaction} transaction
      */
-    sendTokens() {
+    sendTokens(transaction: Transaction) {
         this.navCtrl.push('SendTokensPage');
     }
 
