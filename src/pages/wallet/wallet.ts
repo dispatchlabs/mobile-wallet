@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../../store/states/config';
 import {Store} from '@ngrx/store';
