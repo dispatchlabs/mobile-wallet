@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../../store/states/config';
 import {Store} from '@ngrx/store';
@@ -8,6 +8,7 @@ import * as keccak from 'keccak';
 import * as secp256k1 from 'secp256k1';
 import {Account} from '../../store/states/account';
 import {ConfigAction} from '../../store/redcuers/config.reducer';
+import {Clipboard} from '@ionic-native/clipboard';
 
 declare const Buffer;
 
@@ -31,6 +32,8 @@ export class WalletPage implements OnInit, OnDestroy {
     public configState: Observable<Config>;
     public config: Config;
     public configSubscription: any;
+    @ViewChild('walletInfo')
+    public walletInfo: any;
 
     /**
      *
@@ -38,7 +41,7 @@ export class WalletPage implements OnInit, OnDestroy {
      * @param {NavParams} navParams
      * @param {Store<AppState>} store
      */
-    constructor(public navCtrl: NavController, public navParams: NavParams, private store: Store<AppState>) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private store: Store<AppState>, private clipboard: Clipboard) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
@@ -95,5 +98,12 @@ export class WalletPage implements OnInit, OnDestroy {
         };
         this.config.accounts.push(account);
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+    }
+
+    /**
+     *
+     */
+    public copyToClipboard() {
+        this.clipboard.copy(this.config.defaultAccount.address)
     }
 }

@@ -14,6 +14,7 @@ import {ActionReducer, ActionReducerMap, MetaReducer, StoreModule} from '@ngrx/s
 import {AppState} from './app.state';
 import {ConfigAction} from '../store/redcuers/config.reducer';
 import {HttpModule} from '@angular/http';
+import {Clipboard} from '@ionic-native/clipboard';
 
 export const KEY = 'df2380f2-f131-4c80-9dc0-eababfdf0d71';
 
@@ -71,6 +72,7 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         SplashScreen,
         AppService,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
+        Clipboard
     ]
 })
 export class AppModule {

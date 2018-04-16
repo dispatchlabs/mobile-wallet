@@ -43,7 +43,6 @@
 <ion-content padding>
     <ion-list no-border *ngIf="viewSent === true">
         <button ion-item (click)="transactionDetails()" *ngFor="let transaction of fromTransctions">
-            <ion-icon name="ios-share-outline" item-start color="primary"></ion-icon>
             <ion-label>
                 <ion-grid>
                     <ion-row padding-bottom>
@@ -63,7 +62,6 @@
     </ion-list>
     <ion-list no-border *ngIf="viewSent === false">
         <button ion-item (click)="transactionDetails()" *ngFor="let transaction of toTransactions">
-            <ion-icon name="ios-share-outline" item-start color="primary"></ion-icon>
             <ion-label>
                 <ion-grid>
                     <ion-row padding-bottom>

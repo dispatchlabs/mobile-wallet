@@ -10,26 +10,40 @@
 
 <ion-content padding>
     <h3>Wallet Info</h3>
+    <div id="walletInfo">
     <ion-list>
 
-        <ion-item>
-            <ion-label floating>Private Key</ion-label>
-            <ion-input type="text" [value]="config.defaultAccount.privateKey"></ion-input>
-        </ion-item>
+            <ion-item>
+                <b>
+                    Private Key
+                </b>
+                <p>
+                    {{config.defaultAccount.privateKey}}
+                </p>
+            </ion-item>
 
-        <ion-item>
-            <ion-label floating>Address</ion-label>
-            <ion-input type="text" [value]="config.defaultAccount.address"></ion-input>
-        </ion-item>
+            <ion-item>
+                <b>Address</b>
+                <p>{{config.defaultAccount.address}}</p>
+            </ion-item>
+
+            <ion-item>
+                <ion-label floating>Nickname</ion-label>
+                <ion-input type="text"></ion-input>
+            </ion-item>
 
     </ion-list>
+    </div>
 
     <ion-row margin-bottom>
         <ion-col>
-            <button ion-button>Save</button>
+            <button ion-button [disabled]="true">Save</button>
         </ion-col>
         <ion-col>
-            <button ion-button (click)="generateNewAccount()">Generate New Account</button>
+            <button ion-button (click)="copyToClipboard()"><ion-icon>copy</ion-icon>Copy to Clipboard</button>
+        </ion-col>
+        <ion-col>
+            <button ion-button (click)="generateNewAccount()">Generate New Wallet</button>
         </ion-col>
     </ion-row>
 
