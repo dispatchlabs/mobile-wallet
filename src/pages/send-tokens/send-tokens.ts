@@ -89,7 +89,6 @@ export class SendTokensPage implements OnDestroy {
         const from = Buffer.from(this.config.defaultAccount.address, 'hex');
         const to = Buffer.from(this.to, 'hex');
         const tokens = this.numberToBuffer(parseInt(this.tokens, 10));
-        console.log(this.tokens);
         const time = this.numberToBuffer(date.getTime());
         const hash = keccak('keccak256').update(Buffer.concat([type, from, to, tokens, time])).digest();
         const signature = secp256k1.sign(hash, Buffer.from(privateKey, 'hex'));
