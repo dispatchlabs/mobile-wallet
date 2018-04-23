@@ -61,7 +61,6 @@ export class WalletPage implements OnInit, OnDestroy {
      *
      */
     ngOnInit() {
-
     }
 
     /**
@@ -69,11 +68,6 @@ export class WalletPage implements OnInit, OnDestroy {
      */
     ngOnDestroy() {
         this.configSubscription.unsubscribe();
-    }
-
-    public accountSelected(account: Account): void {
-        this.config.defaultAccount = account;
-        this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
     }
 
     /**
@@ -112,10 +106,15 @@ export class WalletPage implements OnInit, OnDestroy {
 
     /**
      *
-     * @param event
+     * @param {string} address
      */
-    public onAccountChange(event: any): void {
-        console.log(event)
+    public onAccountChange(address: string): void {
+       for (let account of this.config.accounts) {
+           if (account.address === address) {
+               this.config.defaultAccount = account;
+               this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+           }
+       }
     }
 
     /**
