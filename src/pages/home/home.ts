@@ -75,7 +75,7 @@ export class HomePage implements OnInit, OnDestroy {
     }
 
     /**
-     * 
+     *
      * @param {Transaction} transaction
      */
     sendTokens(transaction: Transaction) {
@@ -85,8 +85,8 @@ export class HomePage implements OnInit, OnDestroy {
     /**
      *
      */
-    transactionDetails() {
-        this.navCtrl.push('DetailsPage');
+    transactionDetails(transaction: Transaction) {
+        this.navCtrl.push('DetailsPage', transaction);
     }
 
     /**

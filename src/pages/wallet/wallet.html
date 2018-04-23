@@ -29,8 +29,12 @@
 
             <ion-item>
                 <ion-label floating>Nickname</ion-label>
-                <ion-input type="text"></ion-input>
+                <ion-input type="text" [(ngModel)]="config.defaultAccount.name" (ngModelChange)="onNameChange($event)"></ion-input>
             </ion-item>
+
+        <ion-item>
+            {{config.defaultAccount.name}}
+        </ion-item>
 
     </ion-list>
     </div>
@@ -48,10 +52,10 @@
     </ion-row>
 
     <h3>My Saved Wallets</h3>
-    <ion-list radio-group>
+    <ion-list radio-group [(ngModel)]="selectedAddress" (ngModelChange)="onAccountChange($event)">
         <ion-item *ngFor="let account of config.accounts">
             <ion-label color="dark">{{account.address}}</ion-label>
-            <ion-radio (click)="accountSelected(account)" [value]="account.address" [checked]="config.defaultAccount.address"></ion-radio>
+            <ion-radio [value]="account.address"></ion-radio>
         </ion-item>
     </ion-list>
 </ion-content>

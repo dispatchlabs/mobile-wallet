@@ -16,15 +16,17 @@ import {Transaction} from '../../store/states/transaction';
 })
 export class DetailsPage {
 
-    @Input()
+    /**
+     * Class level declarations
+     */
     public transaction: Transaction;
 
+    /**
+     *
+     * @param {NavController} navCtrl
+     * @param {NavParams} navParams
+     */
     constructor(public navCtrl: NavController, public navParams: NavParams) {
-        console.log(this.transaction)
+        this.transaction = navParams.data;
     }
-
-    ionViewDidLoad() {
-        console.log('ionViewDidLoad DetailsPage');
-    }
-
 }

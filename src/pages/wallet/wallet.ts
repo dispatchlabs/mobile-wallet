@@ -34,6 +34,7 @@ export class WalletPage implements OnInit, OnDestroy {
     public configSubscription: any;
     @ViewChild('walletInfo')
     public walletInfo: any;
+    public selectedAddress: string;
 
     /**
      *
@@ -45,6 +46,7 @@ export class WalletPage implements OnInit, OnDestroy {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
+            this.selectedAddress = this.config.defaultAccount.address;
         });
     }
 
@@ -97,6 +99,23 @@ export class WalletPage implements OnInit, OnDestroy {
         };
         this.config.accounts.push(account);
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+    }
+
+    /**
+     *
+     * @param {string} name
+     */
+    public onNameChange(name: string): void {
+        this.config.defaultAccount.name = name;
+        this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+    }
+
+    /**
+     *
+     * @param event
+     */
+    public onAccountChange(event: any): void {
+        console.log(event)
     }
 
     /**
