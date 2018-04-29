@@ -22,6 +22,11 @@
     </ion-navbar>
     <ion-grid>
         <ion-row>
+            <ion-col padding-left>
+                <h3>{{config.defaultAccount.name}}</h3>
+            </ion-col>
+        </ion-row>
+        <ion-row>
             <ion-col padding-left col-auto>
                 <h3 class="my0"><img src="assets/imgs/wallet.svg" class="icon"></h3>
             </ion-col>
@@ -36,9 +41,6 @@
             <ion-col text-right padding-right>
                 <h3 class="font-weight-light my0">{{balance}}</h3>
             </ion-col>
-        </ion-row>
-        <ion-row>
-            {{config.defaultAccount.name}}
         </ion-row>
     </ion-grid>
 </ion-header>

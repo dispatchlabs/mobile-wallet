@@ -84,6 +84,7 @@ export class HomePage implements OnInit, OnDestroy {
 
     /**
      *
+     * @param {Transaction} transaction
      */
     transactionDetails(transaction: Transaction) {
         this.navCtrl.push('DetailsPage', transaction);
