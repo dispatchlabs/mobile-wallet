@@ -12,7 +12,6 @@
     <h3>Wallet Info</h3>
     <div id="walletInfo">
     <ion-list>
-
             <ion-item>
                 <b>
                     Private Key
@@ -29,16 +28,13 @@
 
             <ion-item>
                 <ion-label floating>Nickname</ion-label>
-                <ion-input type="text"></ion-input>
+                <ion-input type="text" [(ngModel)]="config.defaultAccount.name" (ngModelChange)="onNameChange($event)"></ion-input>
             </ion-item>
 
     </ion-list>
     </div>
 
     <ion-row margin-bottom>
-        <ion-col>
-            <button ion-button [disabled]="true">Save</button>
-        </ion-col>
         <ion-col>
             <button ion-button (click)="copyToClipboard()"><ion-icon name="copy"></ion-icon> &nbsp; Copy to Clipboard</button>
         </ion-col>
@@ -48,10 +44,10 @@
     </ion-row>
 
     <h3>My Saved Wallets</h3>
-    <ion-list radio-group>
+    <ion-list radio-group [(ngModel)]="selectedAddress" (ngModelChange)="onAccountChange($event)">
         <ion-item *ngFor="let account of config.accounts">
-            <ion-label color="dark">{{account.address}}</ion-label>
-            <ion-radio (click)="accountSelected(account)" [value]="account.address" [checked]="config.defaultAccount.address"></ion-radio>
+            <ion-label color="dark">{{account.name}}</ion-label>
+            <ion-radio [value]="account.address"></ion-radio>
         </ion-item>
     </ion-list>
 </ion-content>
