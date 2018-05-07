@@ -1,3 +1,5 @@
+![alt dispatch](https://dispatchlabs.io/wp-content/themes/ccprototypev5/images/dispatchlabs-logo.png)
+
 # Dispatch Web Wallet 
 
 ## ![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_remove_red_eye_black_24px.svg) View the App
