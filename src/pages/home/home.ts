@@ -22,9 +22,11 @@ export class HomePage implements OnInit, OnDestroy {
     public balance: number;
     public fromTransctions: Transaction[];
     public toTransactions: Transaction[];
-    public viewSent = false;
     public appEventSubscription: any;
     public transaction: Transaction;
+    public displayTransactions: string;
+    public transactionType: string;
+    public details = false;
 
     /**
      *
@@ -45,6 +47,23 @@ export class HomePage implements OnInit, OnDestroy {
                     return;
             }
         });
+        this.displayTransactions = 'transactions';
+        this.transactionType = 'all';
+    }
+
+
+    /**
+     *
+     */
+    ngOnInit() {
+    }
+
+    /**
+     *
+     */
+    ngOnDestroy() {
+        this.configSubscription.unsubscribe();
+        this.appEventSubscription.unsubscribe();
     }
 
     /**
@@ -88,19 +107,5 @@ export class HomePage implements OnInit, OnDestroy {
      */
     transactionDetails(transaction: Transaction) {
         this.navCtrl.push('DetailsPage', transaction);
-    }
-
-    /**
-     *
-     */
-    ngOnInit() {
-    }
-
-    /**
-     *
-     */
-    ngOnDestroy() {
-        this.configSubscription.unsubscribe();
-        this.appEventSubscription.unsubscribe();
     }
 }

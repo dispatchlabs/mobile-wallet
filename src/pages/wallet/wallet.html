@@ -9,6 +9,23 @@
 
 
 <ion-content padding>
+    <ion-card *ngIf="disclaimer">
+        <div class="card-title">
+            <ion-icon name="alert"></ion-icon> Attention
+        </div>
+        <div class="card-body">
+            <p>
+                Use the copy button below to copy your wallet information and store it in a secure place
+            </p>
+            <p>
+                <button ion-button (click)="disclaimer = !disclaimer">Got it, thanks!</button>
+            </p>
+            <div class="checkbox-container" margin-top>
+                <ion-checkbox></ion-checkbox>
+                <ion-label>Don't show me this again</ion-label>
+            </div>
+        </div>
+    </ion-card>
     <h3>Wallet Info</h3>
     <div id="walletInfo">
     <ion-list>
@@ -31,15 +48,16 @@
                 <ion-input type="text" [(ngModel)]="config.defaultAccount.name" (ngModelChange)="onNameChange($event)"></ion-input>
             </ion-item>
 
+            <textarea [value]="getWalletInfoText()" #walletInfo class="copy-target"></textarea>
     </ion-list>
     </div>
 
     <ion-row margin-bottom>
         <ion-col>
-            <button ion-button (click)="copyToClipboard()"><ion-icon name="copy"></ion-icon> &nbsp; Copy to Clipboard</button>
+            <button ion-button (click)="copyToClipboard()"><ion-icon name="copy"></ion-icon> &nbsp; Copy</button>
         </ion-col>
-        <ion-col>
-            <button ion-button (click)="generateNewAccount()"><ion-icon name="add-circle"></ion-icon> &nbsp; Generate New Wallet</button>
+        <ion-col text-right>
+            <button ion-button outline (click)="generateNewAccount()"><ion-icon name="add-circle"></ion-icon> &nbsp; New</button>
         </ion-col>
     </ion-row>
 
