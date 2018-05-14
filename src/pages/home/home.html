@@ -1,87 +1,282 @@
 <ion-header>
     <ion-navbar>
-        <button ion-button menuToggle color="secondary">
-            <ion-icon name="menu"></ion-icon>
-        </button>
-        <ion-segment color="secondary" padding>
-            <!--<ion-segment-button value="Paid">
-                All
-            </ion-segment-button>-->
-            <ion-segment-button value="Free" (click)="viewSent = true">
-                Sent
-            </ion-segment-button>
-            <ion-segment-button value="Top" (click)="viewSent = false">
-                Received
-            </ion-segment-button>
-        </ion-segment>
-        <ion-buttons end>
-            <button ion-button icon-only (click)="sendTokens()" color="secondary">
-                <ion-icon name="send"></ion-icon>
-            </button>
-        </ion-buttons>
+        <ion-row align-items-center>
+            <ion-col col-auto class="nav-button">
+                <button ion-button menuToggle color="secondary">
+                    <ion-icon name="menu"></ion-icon>
+                </button>
+            </ion-col>
+            <ion-col text-center>
+                <img src="assets/imgs/logo-no-rings.png" class="header-logo">
+            </ion-col>
+            <ion-col col-auto class="nav-button">
+                <ion-buttons>
+                    <button ion-button icon-only (click)="sendTokens()" color="secondary">
+                        <img src="assets/imgs/send-button.svg">
+                    </button>
+                </ion-buttons>
+            </ion-col>
+        </ion-row>
     </ion-navbar>
-    <ion-grid>
-        <ion-row>
-            <ion-col padding-left>
-                <h3>{{config.defaultAccount.name}}</h3>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col padding-left col-auto>
-                <h3 class="my0"><img src="assets/imgs/wallet.svg" class="icon"></h3>
-            </ion-col>
-            <ion-col text-right padding-right class="ellipsis">
-                <h3 class="font-weight-light my0 ellipsis">{{config.defaultAccount.address}}</h3>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col padding-left col-auto>
-                <h3 class="my0"><img src="assets/imgs/tokens.svg" class="icon"></h3>
-            </ion-col>
-            <ion-col text-right padding-right>
-                <h3 class="font-weight-light my0">{{balance}}</h3>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    <div class="tokens">
+        <p class="balance">
+            2,564.01{{balance}}
+        </p>
+        <p class="value">
+            $25,000.83 USD
+        </p>
+    </div>
 </ion-header>
 
 <ion-content padding>
-    <ion-list no-border *ngIf="viewSent === true">
-        <button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of fromTransctions">
-            <ion-label>
-                <ion-grid>
-                    <ion-row padding-bottom>
-                        <span class="wrap-text"><b>To:</b> {{transaction.to}}</span>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col no-padding>
-                            <b>{{transaction.value}} tokens</b>
-                        </ion-col>
-                        <ion-col text-right no-padding>
-                            <span class="grey-text">{{getDate(transaction.time)}}</span>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-            </ion-label>
-        </button>
-    </ion-list>
-    <ion-list no-border *ngIf="viewSent === false">
-        <button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of toTransactions">
-            <ion-label>
-                <ion-grid>
-                    <ion-row padding-bottom>
-                        <span class="wrap-text"><b>From:</b> {{transaction.from}}</span>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col no-padding>
-                            <b>{{transaction.value}} tokens</b>
-                        </ion-col>
-                        <ion-col text-right no-padding>
-                            <span class="grey-text">{{getDate(transaction.time)}}</span>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-            </ion-label>
-        </button>
-    </ion-list>
+    <ion-row class="home-tabs">
+        <ion-col col-auto>
+            <a (click)="displayTransactions = 'transactions'" [class.active]="displayTransactions === 'transactions'">Transactions</a>
+        </ion-col>
+        <ion-col col-auto>
+            <a (click)="displayTransactions = 'news'" [class.active]="displayTransactions === 'news'">News</a>
+        </ion-col>
+    </ion-row>
+    <div [ngSwitch]="displayTransactions">
+        <div *ngSwitchCase="'transactions'">
+            <ion-row class="transaction-tabs">
+                <ion-col col-auto>
+                    <a (click)="transactionType = 'all'" [class.active]="transactionType === 'all'">All</a>
+                </ion-col>
+                <ion-col col-auto>
+                    <a (click)="transactionType = 'sent'" [class.active]="transactionType === 'sent'">Sent</a>
+                </ion-col>
+                <ion-col col-auto>
+                    <a (click)="transactionType = 'received'" [class.active]="transactionType === 'received'">received</a>
+                </ion-col>
+            </ion-row>
+            <div [ngSwitch]="transactionType">
+                <ion-list *ngSwitchCase="'all'">
+                    <button ion-item detail-none (click)="details = !details">
+                        <ion-label>
+                            <ion-grid>
+                                <ion-row align-items-center>
+                                    <ion-col col-auto class="profile-image">
+                                        <img src="assets/imgs/default-avatar.png">
+                                    </ion-col>
+                                    <ion-col>
+                                        <p class="date">
+                                            March 4, 2018
+                                        </p>
+                                        <p class="event">
+                                            Jackson sent you tokens
+                                        </p>
+                                    </ion-col>
+                                    <ion-col col-auto class="amount received">
+                                        +20
+                                    </ion-col>
+                                    <ion-col col-12 *ngIf="details" class="details">
+                                        <table>
+                                            <tr>
+                                                <th>
+                                                    Time:
+                                                </th>
+                                                <th>
+                                                    2018 - 01-01T00:00:00-08:00
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Hash:
+                                                </td>
+                                                <td>
+                                                    MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgH/YVs
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    From:
+                                                </td>
+                                                <td>
+                                                    MIGeMA0GCSqGSIb3DQEBAQ
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Signature:
+                                                </td>
+                                                <td>
+                                                    MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHYVsMIGeMA0GCSqGSIb3DQEBAQUAA4G
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </ion-label>
+                    </button>
+
+                    <button ion-item detail-none>
+                        <ion-label>
+                            <ion-grid>
+                                <ion-row align-items-center>
+                                    <ion-col col-auto class="profile-image">
+                                        <img src="assets/imgs/default-avatar.png">
+                                    </ion-col>
+                                    <ion-col>
+                                        <p class="date">
+                                            March 4, 2018
+                                        </p>
+                                        <p class="event">
+                                            You sent Kim tokens
+                                        </p>
+                                    </ion-col>
+                                    <ion-col col-auto class="amount sent">
+                                        -10
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </ion-label>
+                    </button>
+                </ion-list>
+
+                <ion-list *ngSwitchCase="'sent'">
+                    <button ion-item detail-none>
+                        <ion-label>
+                            <ion-grid>
+                                <ion-row align-items-center>
+                                    <ion-col col-auto class="profile-image">
+                                        <img src="assets/imgs/default-avatar.png">
+                                    </ion-col>
+                                    <ion-col>
+                                        <p class="date">
+                                            March 4, 2018
+                                        </p>
+                                        <p class="event">
+                                            You sent Kim tokens
+                                        </p>
+                                    </ion-col>
+                                    <ion-col col-auto class="amount sent">
+                                        -10
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </ion-label>
+                    </button>
+                </ion-list>
+
+                <ion-list *ngSwitchCase="'received'">
+                    <button ion-item detail-none (click)="details = !details">
+                        <ion-label>
+                            <ion-grid>
+                                <ion-row align-items-center>
+                                    <ion-col col-auto class="profile-image">
+                                        <img src="assets/imgs/default-avatar.png">
+                                    </ion-col>
+                                    <ion-col>
+                                        <p class="date">
+                                            March 4, 2018
+                                        </p>
+                                        <p class="event">
+                                            Jackson sent you tokens
+                                        </p>
+                                    </ion-col>
+                                    <ion-col col-auto class="amount received">
+                                        +20
+                                    </ion-col>
+                                    <ion-col col-12 *ngIf="details" class="details">
+                                        <table>
+                                            <tr>
+                                                <th>
+                                                    Time:
+                                                </th>
+                                                <th>
+                                                    2018 - 01-01T00:00:00-08:00
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Hash:
+                                                </td>
+                                                <td>
+                                                    MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgH/YVs
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    From:
+                                                </td>
+                                                <td>
+                                                    MIGeMA0GCSqGSIb3DQEBAQ
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Signature:
+                                                </td>
+                                                <td>
+                                                    MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHYVsMIGeMA0GCSqGSIb3DQEBAQUAA4G
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </ion-label>
+                    </button>
+                </ion-list>
+            </div>
+            <!--<button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of fromTransctions">
+                <ion-label>
+                    <ion-grid>
+                        <ion-row padding-bottom>
+                            <span class="wrap-text"><b>To:</b> {{transaction.to}}</span>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col no-padding>
+                                <b>{{transaction.value}} tokens</b>
+                            </ion-col>
+                            <ion-col text-right no-padding>
+                                <span class="grey-text">{{getDate(transaction.time)}}</span>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </ion-label>
+            </button>-->
+            <!--<button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of toTransactions">
+                    <ion-label>
+                        <ion-grid>
+                            <ion-row padding-bottom>
+                                <span class="wrap-text"><b>From:</b> {{transaction.from}}</span>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col no-padding>
+                                    <b>{{transaction.value}} tokens</b>
+                                </ion-col>
+                                <ion-col text-right no-padding>
+                                    <span class="grey-text">{{getDate(transaction.time)}}</span>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-label>
+                </button>-->
+        </div>
+
+        <ion-list *ngSwitchCase="'news'">
+            <button ion-item detail-none (click)="details = !details" class="news">
+                <ion-label>
+                    <ion-grid>
+                        <ion-row align-items-center>
+                            <ion-col col-auto class="profile-image">
+                                <img src="assets/imgs/default-icon.png">
+                            </ion-col>
+                            <ion-col>
+                                <p>
+                                    This Is a Random News Article It’s Really Interesting and Important
+                                </p>
+                                <p class="date">
+                                    March 4, 2018
+                                </p>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </ion-label>
+            </button>
+        </ion-list>
+    </div>
 </ion-content>

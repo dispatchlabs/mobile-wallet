@@ -1,18 +1,33 @@
-<ion-menu [content]="content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-menu [content]="content" type="push">
 
-  <ion-content>
-    <ion-list>
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
-      </button>
-    </ion-list>
-  </ion-content>
+    <ion-content>
+        <ion-row justify-content-end>
+            <div class="new-wallet" (click)="generateNewAccount()">
+                +
+            </div>
+        </ion-row>
 
+        <img src="assets/imgs/oval-2@3x.png">
+        <ion-input type="text" [(ngModel)]="config.defaultAccount.name" (ngModelChange)="onNameChange($event)"></ion-input>
+
+        <ion-row>
+            <ion-col class="ellipsis">
+                {{config.defaultAccount.address}}
+            </ion-col>
+            <ion-col col-auto>
+                <div class="copy-button" (click)="copyToClipboard()"></div>
+            </ion-col>
+        </ion-row>
+
+        <ion-list radio-group [(ngModel)]="selectedAddress" (ngModelChange)="onAccountChange($event)" margin-top>
+            <ion-item *ngFor="let account of config.accounts">
+                <ion-label color="primary">{{account.name}}</ion-label>
+                <ion-radio [value]="account.address"></ion-radio>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+
+    <textarea [value]="getWalletInfoText()" #walletInfo class="copy-target"></textarea>
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->

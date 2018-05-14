@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../../store/states/config';
 import {Store} from '@ngrx/store';
@@ -8,7 +8,6 @@ import * as keccak from 'keccak';
 import * as secp256k1 from 'secp256k1';
 import {Account} from '../../store/states/account';
 import {ConfigAction} from '../../store/redcuers/config.reducer';
-import {Clipboard} from '@ionic-native/clipboard';
 
 declare const Buffer;
 
@@ -35,6 +34,7 @@ export class WalletPage implements OnInit, OnDestroy {
     @ViewChild('walletInfo')
     public walletInfo: any;
     public selectedAddress: string;
+    public disclaimer = true;
 
     /**
      *
@@ -42,19 +42,12 @@ export class WalletPage implements OnInit, OnDestroy {
      * @param {NavParams} navParams
      * @param {Store<AppState>} store
      */
-    constructor(public navCtrl: NavController, public navParams: NavParams, private store: Store<AppState>, private clipboard: Clipboard) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private store: Store<AppState>,  public toastController: ToastController) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
             this.selectedAddress = this.config.defaultAccount.address;
         });
-    }
-
-    /**
-     *
-     */
-    ionViewDidLoad() {
-        console.log('ionViewDidLoad WalletPage');
     }
 
     /**
@@ -121,6 +114,29 @@ export class WalletPage implements OnInit, OnDestroy {
      *
      */
     public copyToClipboard() {
-        this.clipboard.copy(this.config.defaultAccount.address)
+        this.walletInfo.nativeElement.select();
+        document.execCommand('Copy');
+        let toast = this.toastController.create({
+            message: 'Copied to clipboard!',
+            duration: 3000,
+            position: 'top'
+        });
+
+        toast.onDidDismiss(() => {
+            console.log('Dismissed toast');
+        });
+
+        toast.present();
+    }
+
+    /**
+     *
+     * @returns {string}
+     */
+    public getWalletInfoText(): string {
+        let text = 'Private Key:\n' + this.config.defaultAccount.privateKey + ',\n\n' +
+            'Address:\n' + this.config.defaultAccount.address;
+        return text;
+
     }
 }

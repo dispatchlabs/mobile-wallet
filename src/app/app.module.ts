@@ -15,6 +15,8 @@ import {AppState} from './app.state';
 import {ConfigAction} from '../store/redcuers/config.reducer';
 import {HttpModule} from '@angular/http';
 import {Clipboard} from '@ionic-native/clipboard';
+import {CommonModule} from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 export const KEY = 'df2380f2-f131-4c80-9dc0-eababfdf0d71';
 
@@ -55,6 +57,8 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
+        CommonModule,
         HttpModule,
         IonicModule.forRoot(MyApp),
         // NGRX
