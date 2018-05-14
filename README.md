@@ -1,6 +1,4 @@
-![alt dispatch](https://dispatchlabs.io/wp-content/themes/ccprototypev5/images/dispatchlabs-logo.png)
-
-# Dispatch Web Wallet 
+![alt dispatch](https://github.com/dispatchlabs/mobile-wallet/blob/master/src/assets/imgs/github-wallet-header.jpg)
 
 ## ![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_remove_red_eye_black_24px.svg) View the App
 If you want to view the app without cloning the project and running it locally:
