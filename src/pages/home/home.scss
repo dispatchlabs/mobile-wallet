@@ -113,7 +113,7 @@ page-home {
         font-size: 20px;
         letter-spacing: 1.25px;
         // max-width: 40px;
-        padding-right: 20px;
+        padding-right: 10px;
 
         &.received {
           color: #50E3C2;
@@ -140,7 +140,7 @@ page-home {
           th, td {
             color: #4A4A4A;
             padding: 10px 0;
-            min-width: 140px;
+            min-width: 120px;
             word-break: break-all;
             white-space: normal;
             line-height: 26px;
