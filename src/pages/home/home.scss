@@ -89,11 +89,8 @@ page-home {
       border-radius: 9px !important;
 
       .profile-image {
-        padding: 10px 20px 5px 10px;
-
-        img {
-          max-width: 54px;
-        }
+        // max-width: 54px;
+        padding: 10px;
       }
 
       .date, .event {
@@ -109,11 +106,13 @@ page-home {
       .event {
         color: #4A4A4A;
         margin: 0;
+        white-space: normal;
       }
 
       .amount {
         font-size: 20px;
         letter-spacing: 1.25px;
+        // max-width: 40px;
         padding-right: 20px;
 
         &.received {
