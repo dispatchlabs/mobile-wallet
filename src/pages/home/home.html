@@ -20,7 +20,7 @@
     </ion-navbar>
     <div class="tokens">
         <p class="balance">
-            2,564.01{{balance}}
+            {{balance}}
         </p>
         <p class="value">
             $25,000.83 USD
@@ -52,7 +52,7 @@
             </ion-row>
             <div [ngSwitch]="transactionType">
                 <ion-list *ngSwitchCase="'all'">
-                    <button ion-item detail-none (click)="details = !details">
+                    <button ion-item detail-none (click)="details = !details" *ngFor="let transaction of fromTransctions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -61,14 +61,14 @@
                                     </ion-col>
                                     <ion-col>
                                         <p class="date">
-                                            March 4, 2018
+                                            {{getDate(transaction.time)}}
                                         </p>
                                         <p class="event">
-                                            Jackson sent you tokens
+                                            You received tokens
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount received">
-                                        +20
+                                        +{{transaction.value}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="details" class="details">
                                         <table>
@@ -77,7 +77,7 @@
                                                     Time:
                                                 </th>
                                                 <th>
-                                                    2018 - 01-01T00:00:00-08:00
+                                                    {{getDate(transaction.time)}}
                                                 </th>
                                             </tr>
                                             <tr>
@@ -111,7 +111,7 @@
                         </ion-label>
                     </button>
 
-                    <button ion-item detail-none>
+                    <button ion-item detail-none *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -120,14 +120,14 @@
                                     </ion-col>
                                     <ion-col>
                                         <p class="date">
-                                            March 4, 2018
+                                            {{getDate(transaction.time)}}
                                         </p>
                                         <p class="event">
-                                            You sent Kim tokens
+                                            You sent tokens
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount sent">
-                                        -10
+                                        -{{transaction.value}}
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>
@@ -136,7 +136,7 @@
                 </ion-list>
 
                 <ion-list *ngSwitchCase="'sent'">
-                    <button ion-item detail-none>
+                    <button ion-item detail-none *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -145,14 +145,14 @@
                                     </ion-col>
                                     <ion-col>
                                         <p class="date">
-                                            March 4, 2018
+                                            {{getDate(transaction.time)}}
                                         </p>
                                         <p class="event">
-                                            You sent Kim tokens
+                                            You sent tokens
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount sent">
-                                        -10
+                                        -{{transaction.value}}
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>
@@ -161,7 +161,7 @@
                 </ion-list>
 
                 <ion-list *ngSwitchCase="'received'">
-                    <button ion-item detail-none (click)="details = !details">
+                    <button ion-item detail-none (click)="details = !details" *ngFor="let transaction of fromTransctions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -170,14 +170,14 @@
                                     </ion-col>
                                     <ion-col>
                                         <p class="date">
-                                            March 4, 2018
+                                            {{getDate(transaction.time)}}
                                         </p>
                                         <p class="event">
-                                            Jackson sent you tokens
+                                            You received tokens
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount received">
-                                        +20
+                                        +{{transaction.value}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="details" class="details">
                                         <table>
@@ -186,7 +186,7 @@
                                                     Time:
                                                 </th>
                                                 <th>
-                                                    2018 - 01-01T00:00:00-08:00
+                                                    {{getDate(transaction.time)}}
                                                 </th>
                                             </tr>
                                             <tr>
