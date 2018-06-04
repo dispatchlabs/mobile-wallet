@@ -113,7 +113,7 @@ export class SendTokensPage implements OnDestroy {
      */
     private getStatus(): void {
         setTimeout(() => {
-            this.appService.get('http://' + this.config.seedNodeIp + ':1975/v1/statuses/' + this.id).subscribe(response => {
+            this.appService.get('http://' + this.config.seedNodeIp + '/v1/statuses/' + this.id).subscribe(response => {
                 if (response.status === 'PENDING') {
                     this.getStatus();
                     return;

@@ -70,13 +70,13 @@ export class HomePage implements OnInit, OnDestroy {
      *
      */
     public refresh(): void {
-        this.appService.get('http://' + this.config.seedNodeIp + ':1975/v1/transactions/from/' + this.config.defaultAccount.address).subscribe(response => {
+        this.appService.get('http://' + this.config.seedNodeIp + '/v1/transactions/from/' + this.config.defaultAccount.address).subscribe(response => {
             this.fromTransctions = response.data;
         });
-        this.appService.get('http://' + this.config.seedNodeIp + ':1975/v1/transactions/to/' + this.config.defaultAccount.address).subscribe(response => {
+        this.appService.get('http://' + this.config.seedNodeIp + '/v1/transactions/to/' + this.config.defaultAccount.address).subscribe(response => {
             this.toTransactions = response.data;
         });
-        this.appService.get('http://' + this.config.seedNodeIp + ':1975/v1/accounts/' + this.config.defaultAccount.address).subscribe(response => {
+        this.appService.get('http://' + this.config.seedNodeIp + '/v1/accounts/' + this.config.defaultAccount.address).subscribe(response => {
             if (response.status === 'OK') {
                 this.balance = response.data.balance;
             }

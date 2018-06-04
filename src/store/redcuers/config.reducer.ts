@@ -38,13 +38,13 @@ export class ConfigAction implements Action {
      */
     public static getInitialState(): Config {
         const defaultAccount: Account = {
-            address: '79db55dd1c8ae495c267bde617f7a9e5d5c67719',
-            privateKey: 'e7181240095e27679bf38e8ad77d37bedb5865b569157b4c14cdb1bebb7c6e2b',
+            address: '3ed25f42484d517cdfc72cafb7ebc9e8baa52c2c',
+            privateKey: '0f86ea981203b26b5b8244c8f661e30e5104555068a4bd168d3e3015db9bb25a',
             balance: 0,
             name: 'Dispatch Labs'
         };
         return {
-            seedNodeIp: 'mcgregor.io',
+            seedNodeIp: 'mcgregor.io:1951',
             defaultAccount: defaultAccount,
             accounts: [defaultAccount],
             transactions: null
