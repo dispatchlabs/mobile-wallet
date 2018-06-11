@@ -24,7 +24,6 @@ export class AppService {
      * @param {Http} http
      */
     constructor(private http: Http) {
-
     }
 
     /**
@@ -33,8 +32,6 @@ export class AppService {
      * @returns {Observable<any>}
      */
     public get(url: string): any {
-
-        console.log(url);
         const headers = new Headers({'Content-Type': 'application/json'});
         const requestOptions = new RequestOptions({headers: headers});
         return this.http.get(url, requestOptions).map(response => response.json());
