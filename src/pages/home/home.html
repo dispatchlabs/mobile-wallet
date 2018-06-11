@@ -20,7 +20,7 @@
     </ion-navbar>
     <div class="tokens">
         <p class="balance">
-            {{balance}}
+            {{balance  | number}}
         </p>
         <p class="value">
             $25,000.83 USD
@@ -52,7 +52,7 @@
             </ion-row>
             <div [ngSwitch]="transactionType">
                 <ion-list *ngSwitchCase="'all'">
-                    <button ion-item detail-none (click)="details = !details" *ngFor="let transaction of toTransctions">
+                    <button ion-item detail-none (click)="details = !details" *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -111,7 +111,7 @@
                         </ion-label>
                     </button>
 
-                    <button ion-item detail-none *ngFor="let transaction of toTransactions">
+                    <button ion-item detail-none *ngFor="let transaction of fromTransctions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -136,7 +136,7 @@
                 </ion-list>
 
                 <ion-list *ngSwitchCase="'sent'">
-                    <button ion-item detail-none *ngFor="let transaction of fromTransactions">
+                    <button ion-item detail-none *ngFor="let transaction of fromTransctions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -161,7 +161,7 @@
                 </ion-list>
 
                 <ion-list *ngSwitchCase="'received'">
-                    <button ion-item detail-none (click)="details = !details" *ngFor="let transaction of fromTransctions">
+                    <button ion-item detail-none (click)="details = !details" *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -219,6 +219,7 @@
                             </ion-grid>
                         </ion-label>
                     </button>
+
                 </ion-list>
             </div>
             <!--<button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of fromTransctions">
