@@ -102,7 +102,7 @@ export class SendTokensPage implements OnDestroy {
             signature: new Buffer(signature.signature).toString('hex') + '00',
         };
 
-        this.appService.post('http://' + this.config.seedNodeIp + ':1975/v1/transactions', transaction).subscribe(response => {
+        this.appService.post('http://' + this.config.seedNodeIp + '/v1/transactions', transaction).subscribe(response => {
             this.id = response.id;
             this.getStatus();
         });

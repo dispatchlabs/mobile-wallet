@@ -77,7 +77,7 @@ export class HomePage implements OnInit, OnDestroy {
             this.toTransactions = response.data;
         });
         this.appService.get('http://' + this.config.seedNodeIp + '/v1/accounts/' + this.config.defaultAccount.address).subscribe(response => {
-            if (response.status === 'OK') {
+            if (response.status === 'Ok') {
                 this.balance = response.data.balance;
             }
         });
