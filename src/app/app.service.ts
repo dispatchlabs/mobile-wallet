@@ -88,7 +88,7 @@ export class AppService implements OnDestroy {
             address: Buffer.from(this.toAddress(publicKey)).toString('hex'),
             privateKey: Buffer.from(privateKey).toString('hex'),
             balance: 0,
-            name: ''
+            name: 'New Wallet'
         };
 
         this.config.defaultAccount = account;
