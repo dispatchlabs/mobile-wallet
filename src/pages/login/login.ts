@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {HomePage} from '../home/home';
+import {AppService} from '../../app/app.service';
 
 /**
  * Generated class for the LoginPage page.
@@ -8,7 +9,6 @@ import {HomePage} from '../home/home';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
 @IonicPage()
 @Component({
     selector: 'page-login',
@@ -16,13 +16,20 @@ import {HomePage} from '../home/home';
 })
 export class LoginPage {
 
-    constructor(public navCtrl: NavController, public navParams: NavParams) {
+    /**
+     *
+     * @param {NavController} navCtrl
+     * @param {NavParams} navParams
+     * @param {AppService} appService
+     */
+    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService) {
     }
 
     /**
      *
      */
     next() {
+        this.appService.generateNewAccount();
         this.navCtrl.setRoot(HomePage);
     }
 

@@ -8,6 +8,7 @@ import * as keccak from 'keccak';
 import * as secp256k1 from 'secp256k1';
 import {Account} from '../../store/states/account';
 import {ConfigAction} from '../../store/redcuers/config.reducer';
+import {AppService} from '../../app/app.service';
 
 declare const Buffer;
 
@@ -41,8 +42,10 @@ export class WalletPage implements OnInit, OnDestroy {
      * @param {NavController} navCtrl
      * @param {NavParams} navParams
      * @param {Store<AppState>} store
+     * @param {ToastController} toastController
+     * @param {AppService} appService
      */
-    constructor(public navCtrl: NavController, public navParams: NavParams, private store: Store<AppState>,  public toastController: ToastController) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private store: Store<AppState>, public toastController: ToastController, private appService: AppService) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
@@ -67,25 +70,7 @@ export class WalletPage implements OnInit, OnDestroy {
      *
      */
     public generateNewAccount(): void {
-        const privateKey = new Buffer(32);
-        do {
-            crypto.getRandomValues(privateKey);
-        } while (!secp256k1.privateKeyVerify(privateKey));
-        const publicKey = secp256k1.publicKeyCreate(privateKey);
-        const hash = keccak('keccak256').update(publicKey).digest();
-        const address = new Buffer(20);
-        for (let i = 0; i < address.length; i++) {
-            address[i] = hash[i + 12];
-        }
-
-        const account: Account = {
-            address: Buffer.from(address).toString('hex'),
-            privateKey: Buffer.from(privateKey).toString('hex'),
-            balance: 0,
-            name: ''
-        };
-        this.config.accounts.push(account);
-        this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+        this.appService.generateNewAccount();
     }
 
     /**
