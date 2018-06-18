@@ -116,6 +116,25 @@ ion-menu .scroll-content {
   }
 }
 
+ion-input {
+  color: #FFF;
+}
+
+.text-input::-moz-placeholder {
+  color: #FFF;
+  opacity: .5;
+}
+
+.text-input:-ms-input-placeholder {
+  color: #FFF;
+  opacity: .5;
+}
+
+.text-input::-webkit-input-placeholder {
+  color: #FFF;
+  opacity: .5;
+}
+
 .header-logo {
   width: 88pt;
 }

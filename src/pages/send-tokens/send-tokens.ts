@@ -119,6 +119,7 @@ export class SendTokensPage implements OnDestroy {
                     return;
                 }
                 this.appService.appEvents.emit({type: APP_REFRESH});
+                this.navCtrl.pop();
                 let toast = this.toastController.create({
                     message: response.status === 'Ok' ? 'Tokens Sent' : response.status,
                     duration: 3000,

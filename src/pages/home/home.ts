@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Content, NavController} from 'ionic-angular';
 import {APP_REFRESH, AppService} from '../../app/app.service';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../../store/states/config';
@@ -20,13 +20,15 @@ export class HomePage implements OnInit, OnDestroy {
     public config: Config;
     public configSubscription: any;
     public balance: number;
-    public fromTransctions: Transaction[];
+    public fromTransactions: Transaction[];
     public toTransactions: Transaction[];
     public appEventSubscription: any;
     public transaction: Transaction;
-    public displayTransactions: string;
+    public displaySection: string;
     public transactionType: string;
-    public details = false;
+    public currentTransactionHash: string;
+    public value = 25000.83;
+    @ViewChild(Content) content: Content;
 
     /**
      *
@@ -47,7 +49,7 @@ export class HomePage implements OnInit, OnDestroy {
                     return;
             }
         });
-        this.displayTransactions = 'transactions';
+        this.displaySection = 'transactionsSection';
         this.transactionType = 'all';
     }
 
@@ -56,6 +58,7 @@ export class HomePage implements OnInit, OnDestroy {
      *
      */
     ngOnInit() {
+        this.content.resize();
     }
 
     /**
@@ -71,7 +74,7 @@ export class HomePage implements OnInit, OnDestroy {
      */
     public refresh(): void {
         this.appService.get('http://' + this.config.seedNodeIp + '/v1/transactions/from/' + this.config.defaultAccount.address).subscribe(response => {
-            this.fromTransctions = response.data;
+            this.fromTransactions = response.data;
         });
         this.appService.get('http://' + this.config.seedNodeIp + '/v1/transactions/to/' + this.config.defaultAccount.address).subscribe(response => {
             this.toTransactions = response.data;
@@ -101,11 +104,11 @@ export class HomePage implements OnInit, OnDestroy {
         this.navCtrl.push('SendTokensPage');
     }
 
-    /**
-     *
-     * @param {Transaction} transaction
-     */
-    transactionDetails(transaction: Transaction) {
-        this.navCtrl.push('DetailsPage', transaction);
+    public onDetailsClicked(transaction: Transaction): void {
+        if (transaction.hash === this.currentTransactionHash) {
+            this.currentTransactionHash = null;
+        } else {
+            this.currentTransactionHash = transaction.hash;
+        }
     }
 }
