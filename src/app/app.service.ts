@@ -104,9 +104,9 @@ export class AppService implements OnDestroy {
     public toAddress(publicKey: any): any {
 
         // Hash publicKey.
-        const hashablePublicKey = new Buffer(publicKey.length-1);
+        const hashablePublicKey = new Buffer(publicKey.length - 1);
         for (let i = 0; i < hashablePublicKey.length; i++) {
-            hashablePublicKey[i] = publicKey[i+1];
+            hashablePublicKey[i] = publicKey[i + 1];
         }
         const hash = keccak('keccak256').update(hashablePublicKey).digest();
 
