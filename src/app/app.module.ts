@@ -17,6 +17,9 @@ import {HttpModule} from '@angular/http';
 import {Clipboard} from '@ionic-native/clipboard';
 import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ScreenOrientation} from '@ionic-native/screen-orientation';
+import {ComponentsModule} from '../components/components.module';
+import {InAppBrowser} from '@ionic-native/in-app-browser';
 
 export const KEY = 'df2380f2-f131-4c80-9dc0-eababfdf0d71';
 
@@ -59,6 +62,7 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         BrowserModule,
         BrowserAnimationsModule,
         CommonModule,
+        ComponentsModule,
         HttpModule,
         IonicModule.forRoot(MyApp),
         // NGRX
@@ -76,7 +80,9 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         SplashScreen,
         AppService,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
-        Clipboard
+        Clipboard,
+        ScreenOrientation,
+        InAppBrowser,
     ]
 })
 export class AppModule {

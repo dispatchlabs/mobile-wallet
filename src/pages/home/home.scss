@@ -18,7 +18,7 @@ page-home {
 
     .balance {
       font-size: 34px;
-      margin-top: 0;
+      margin: 0 0 15px 0;
     }
 
     .value {
@@ -44,7 +44,7 @@ page-home {
   }
 
   .home-tabs {
-    margin: 20px 0;
+    margin-bottom: 15px;
 
     ion-col.col:first-child {
       border-right: 1px solid #FFF;
@@ -89,11 +89,8 @@ page-home {
       border-radius: 9px !important;
 
       .profile-image {
-        padding: 10px 20px 5px 10px;
-
-        img {
-          max-width: 54px;
-        }
+        // max-width: 54px;
+        padding: 10px;
       }
 
       .date, .event {
@@ -109,12 +106,14 @@ page-home {
       .event {
         color: #4A4A4A;
         margin: 0;
+        white-space: normal;
       }
 
       .amount {
         font-size: 20px;
         letter-spacing: 1.25px;
-        padding-right: 20px;
+        // max-width: 40px;
+        padding-right: 10px;
 
         &.received {
           color: #50E3C2;
@@ -141,7 +140,7 @@ page-home {
           th, td {
             color: #4A4A4A;
             padding: 10px 0;
-            min-width: 140px;
+            min-width: 120px;
             word-break: break-all;
             white-space: normal;
             line-height: 26px;

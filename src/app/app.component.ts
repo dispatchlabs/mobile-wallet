@@ -58,6 +58,10 @@ export class MyApp {
             this.selectedAddress = this.config.defaultAccount.address;
         });
 
+        // lock screen orientation to portrait, comment out for browser testing
+        // this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+
+        this.statusBar.styleLightContent();
     }
 
     initializeApp() {

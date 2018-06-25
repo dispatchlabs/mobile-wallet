@@ -1,17 +1,36 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Content, NavController} from 'ionic-angular';
 import {APP_REFRESH, AppService} from '../../app/app.service';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../../store/states/config';
 import {AppState} from '../../app/app.state';
 import {Store} from '@ngrx/store';
 import {Transaction} from '../../store/states/transaction';
+import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
 
 @Component({
     selector: 'page-home',
-    templateUrl: 'home.html'
+    templateUrl: 'home.html',
 })
 export class HomePage implements OnInit, OnDestroy {
+
+    public options : InAppBrowserOptions = {
+        location : 'yes',
+        hidden : 'no', //Or  'yes'
+        clearcache : 'yes',
+        clearsessioncache : 'yes',
+        zoom : 'yes',//Android only ,shows browser zoom controls
+        hardwareback : 'yes',
+        mediaPlaybackRequiresUserAction : 'no',
+        shouldPauseOnSuspend : 'no', //Android only
+        closebuttoncaption : 'Close', //iOS only
+        disallowoverscroll : 'no', //iOS only
+        toolbar : 'yes', //iOS only
+        enableViewportScale : 'no', //iOS only
+        allowInlineMediaPlayback : 'no',//iOS only
+        presentationstyle : 'pagesheet',//iOS only
+        fullscreen : 'yes',//Windows only
+    };
 
     /**
      * Class level-declarations.
@@ -20,13 +39,16 @@ export class HomePage implements OnInit, OnDestroy {
     public config: Config;
     public configSubscription: any;
     public balance: number;
-    public fromTransctions: Transaction[];
+    public fromTransactions: Transaction[];
     public toTransactions: Transaction[];
     public appEventSubscription: any;
     public transaction: Transaction;
-    public displayTransactions: string;
+    public displaySection: string;
     public transactionType: string;
-    public details = false;
+    public currentTransactionHash: string;
+    public value = 25000.83;
+    public url: string;
+    @ViewChild(Content) content: Content;
 
     /**
      *
@@ -34,7 +56,7 @@ export class HomePage implements OnInit, OnDestroy {
      * @param {Store<AppState>} store
      * @param {AppService} appService
      */
-    constructor(public navCtrl: NavController, private store: Store<AppState>, private appService: AppService) {
+    constructor(public navCtrl: NavController, private store: Store<AppState>, private appService: AppService, public inAppBrowser: InAppBrowser) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
@@ -47,7 +69,7 @@ export class HomePage implements OnInit, OnDestroy {
                     return;
             }
         });
-        this.displayTransactions = 'transactions';
+        this.displaySection = 'transactionsSection';
         this.transactionType = 'all';
     }
 
@@ -56,6 +78,7 @@ export class HomePage implements OnInit, OnDestroy {
      *
      */
     ngOnInit() {
+        this.content.resize();
     }
 
     /**
@@ -70,14 +93,14 @@ export class HomePage implements OnInit, OnDestroy {
      *
      */
     public refresh(): void {
-        this.appService.get('http://' + this.config.seedNodeIp + ':1975/v1/transactions/from/' + this.config.defaultAccount.address).subscribe(response => {
-            this.fromTransctions = response.data;
+        this.appService.get('http://' + this.config.seedNodeIp + '/v1/transactions/from/' + this.config.defaultAccount.address).subscribe(response => {
+            this.fromTransactions = response.data;
         });
-        this.appService.get('http://' + this.config.seedNodeIp + ':1975/v1/transactions/to/' + this.config.defaultAccount.address).subscribe(response => {
+        this.appService.get('http://' + this.config.seedNodeIp + '/v1/transactions/to/' + this.config.defaultAccount.address).subscribe(response => {
             this.toTransactions = response.data;
         });
-        this.appService.get('http://' + this.config.seedNodeIp + ':1975/v1/accounts/' + this.config.defaultAccount.address).subscribe(response => {
-            if (response.status === 'OK') {
+        this.appService.get('http://' + this.config.seedNodeIp + '/v1/accounts/' + this.config.defaultAccount.address).subscribe(response => {
+            if (response.status === 'Ok') {
                 this.balance = response.data.balance;
             }
         });
@@ -97,7 +120,7 @@ export class HomePage implements OnInit, OnDestroy {
      *
      * @param {Transaction} transaction
      */
-    sendTokens(transaction: Transaction) {
+    public sendTokens(transaction: Transaction) {
         this.navCtrl.push('SendTokensPage');
     }
 
@@ -105,7 +128,18 @@ export class HomePage implements OnInit, OnDestroy {
      *
      * @param {Transaction} transaction
      */
-    transactionDetails(transaction: Transaction) {
-        this.navCtrl.push('DetailsPage', transaction);
+    public onDetailsClicked(transaction: Transaction): void {
+        if (transaction.hash === this.currentTransactionHash) {
+            this.currentTransactionHash = null;
+        } else {
+            this.currentTransactionHash = transaction.hash;
+        }
+    }
+
+    /**
+     *
+     */
+    public openLink(url: string) {
+        this.inAppBrowser.create(url,'_blank');
     }
 }

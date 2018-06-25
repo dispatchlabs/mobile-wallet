@@ -102,7 +102,7 @@ export class SendTokensPage implements OnDestroy {
             signature: new Buffer(signature.signature).toString('hex') + '00',
         };
 
-        this.appService.post('http://' + this.config.seedNodeIp + ':1975/v1/transactions', transaction).subscribe(response => {
+        this.appService.post('http://' + this.config.seedNodeIp + '/v1/transactions', transaction).subscribe(response => {
             this.id = response.id;
             this.getStatus();
         });
@@ -113,14 +113,15 @@ export class SendTokensPage implements OnDestroy {
      */
     private getStatus(): void {
         setTimeout(() => {
-            this.appService.get('http://' + this.config.seedNodeIp + ':1975/v1/statuses/' + this.id).subscribe(response => {
-                if (response.status === 'PENDING') {
+            this.appService.get('http://' + this.config.seedNodeIp + '/v1/statuses/' + this.id).subscribe(response => {
+                if (response.status === 'Pending') {
                     this.getStatus();
                     return;
                 }
-                this.appService.appEvents.error({type: APP_REFRESH});
+                this.appService.appEvents.emit({type: APP_REFRESH});
+                this.navCtrl.pop();
                 let toast = this.toastController.create({
-                    message: 'Tokens Sent',
+                    message: response.status === 'Ok' ? 'Tokens Sent' : response.status,
                     duration: 3000,
                     position: 'top'
                 });

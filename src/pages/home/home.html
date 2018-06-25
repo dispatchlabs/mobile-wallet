@@ -20,10 +20,10 @@
     </ion-navbar>
     <div class="tokens">
         <p class="balance">
-            2,564.01{{balance}}
+            {{balance | number:'0.2'}}
         </p>
         <p class="value">
-            $25,000.83 USD
+            {{value | currency}} USD
         </p>
     </div>
 </ion-header>
@@ -31,14 +31,15 @@
 <ion-content padding>
     <ion-row class="home-tabs">
         <ion-col col-auto>
-            <a (click)="displayTransactions = 'transactions'" [class.active]="displayTransactions === 'transactions'">Transactions</a>
+            <a (click)="displaySection = 'transactionsSection'"
+               [class.active]="displaySection === 'transactionsSection'">Transactions</a>
         </ion-col>
         <ion-col col-auto>
-            <a (click)="displayTransactions = 'news'" [class.active]="displayTransactions === 'news'">News</a>
+            <a (click)="displaySection = 'newsSection'" [class.active]="displaySection === 'newsSection'">News</a>
         </ion-col>
     </ion-row>
-    <div [ngSwitch]="displayTransactions">
-        <div *ngSwitchCase="'transactions'">
+    <div [ngSwitch]="displaySection">
+        <div *ngSwitchCase="'transactionsSection'">
             <ion-row class="transaction-tabs">
                 <ion-col col-auto>
                     <a (click)="transactionType = 'all'" [class.active]="transactionType === 'all'">All</a>
@@ -47,87 +48,64 @@
                     <a (click)="transactionType = 'sent'" [class.active]="transactionType === 'sent'">Sent</a>
                 </ion-col>
                 <ion-col col-auto>
-                    <a (click)="transactionType = 'received'" [class.active]="transactionType === 'received'">received</a>
+                    <a (click)="transactionType = 'received'"
+                       [class.active]="transactionType === 'received'">received</a>
                 </ion-col>
             </ion-row>
             <div [ngSwitch]="transactionType">
                 <ion-list *ngSwitchCase="'all'">
-                    <button ion-item detail-none (click)="details = !details">
+                    <button ion-item detail-none text-center
+                            *ngIf="(!toTransactions || toTransactions.length === 0) && (!fromTransactions || fromTransactions.length === 0)">
+                        No Transactions
+                    </button>
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
+                            *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
-                                    <ion-col col-auto class="profile-image">
+                                    <ion-col col-2 class="profile-image">
                                         <img src="assets/imgs/default-avatar.png">
                                     </ion-col>
                                     <ion-col>
                                         <p class="date">
-                                            March 4, 2018
+                                            {{getDate(transaction.time)}}
                                         </p>
                                         <p class="event">
-                                            Jackson sent you tokens
+                                            You received tokens
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount received">
-                                        +20
+                                        +{{transaction.value | number}}
                                     </ion-col>
-                                    <ion-col col-12 *ngIf="details" class="details">
-                                        <table>
-                                            <tr>
-                                                <th>
-                                                    Time:
-                                                </th>
-                                                <th>
-                                                    2018 - 01-01T00:00:00-08:00
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Hash:
-                                                </td>
-                                                <td>
-                                                    MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgH/YVs
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    From:
-                                                </td>
-                                                <td>
-                                                    MIGeMA0GCSqGSIb3DQEBAQ
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Signature:
-                                                </td>
-                                                <td>
-                                                    MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHYVsMIGeMA0GCSqGSIb3DQEBAQUAA4G
-                                                </td>
-                                            </tr>
-                                        </table>
+                                    <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
+                                        <transaction-details [transaction]="transaction"></transaction-details>
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>
                         </ion-label>
                     </button>
 
-                    <button ion-item detail-none>
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
+                            *ngFor="let transaction of fromTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
-                                    <ion-col col-auto class="profile-image">
+                                    <ion-col col-2 class="profile-image">
                                         <img src="assets/imgs/default-avatar.png">
                                     </ion-col>
                                     <ion-col>
                                         <p class="date">
-                                            March 4, 2018
+                                            {{getDate(transaction.time)}}
                                         </p>
                                         <p class="event">
-                                            You sent Kim tokens
+                                            You sent tokens
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount sent">
-                                        -10
+                                        -{{transaction.value | number}}
+                                    </ion-col>
+                                    <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
+                                        <transaction-details [transaction]="transaction"></transaction-details>
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>
@@ -136,23 +114,30 @@
                 </ion-list>
 
                 <ion-list *ngSwitchCase="'sent'">
-                    <button ion-item detail-none>
+                    <button ion-item detail-none text-center *ngIf="!fromTransactions || fromTransactions.length === 0">
+                        No Transactions
+                    </button>
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
+                            *ngFor="let transaction of fromTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
-                                    <ion-col col-auto class="profile-image">
+                                    <ion-col col-2 class="profile-image">
                                         <img src="assets/imgs/default-avatar.png">
                                     </ion-col>
                                     <ion-col>
                                         <p class="date">
-                                            March 4, 2018
+                                            {{getDate(transaction.time)}}
                                         </p>
                                         <p class="event">
-                                            You sent Kim tokens
+                                            You sent tokens
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount sent">
-                                        -10
+                                        -{{transaction.value | number}}
+                                    </ion-col>
+                                    <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
+                                        <transaction-details [transaction]="transaction"></transaction-details>
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>
@@ -161,59 +146,30 @@
                 </ion-list>
 
                 <ion-list *ngSwitchCase="'received'">
-                    <button ion-item detail-none (click)="details = !details">
+                    <button ion-item detail-none text-center *ngIf="!toTransactions || toTransactions.length === 0">
+                        No Transactions
+                    </button>
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
+                            *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
-                                    <ion-col col-auto class="profile-image">
+                                    <ion-col col-2 class="profile-image">
                                         <img src="assets/imgs/default-avatar.png">
                                     </ion-col>
                                     <ion-col>
                                         <p class="date">
-                                            March 4, 2018
+                                            {{getDate(transaction.time)}}
                                         </p>
                                         <p class="event">
-                                            Jackson sent you tokens
+                                            You received tokens
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount received">
-                                        +20
+                                        +{{transaction.value | number}}
                                     </ion-col>
-                                    <ion-col col-12 *ngIf="details" class="details">
-                                        <table>
-                                            <tr>
-                                                <th>
-                                                    Time:
-                                                </th>
-                                                <th>
-                                                    2018 - 01-01T00:00:00-08:00
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Hash:
-                                                </td>
-                                                <td>
-                                                    MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgH/YVs
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    From:
-                                                </td>
-                                                <td>
-                                                    MIGeMA0GCSqGSIb3DQEBAQ
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Signature:
-                                                </td>
-                                                <td>
-                                                    MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHYVsMIGeMA0GCSqGSIb3DQEBAQUAA4G
-                                                </td>
-                                            </tr>
-                                        </table>
+                                    <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
+                                        <transaction-details [transaction]="transaction"></transaction-details>
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>
@@ -221,56 +177,21 @@
                     </button>
                 </ion-list>
             </div>
-            <!--<button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of fromTransctions">
-                <ion-label>
-                    <ion-grid>
-                        <ion-row padding-bottom>
-                            <span class="wrap-text"><b>To:</b> {{transaction.to}}</span>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col no-padding>
-                                <b>{{transaction.value}} tokens</b>
-                            </ion-col>
-                            <ion-col text-right no-padding>
-                                <span class="grey-text">{{getDate(transaction.time)}}</span>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-label>
-            </button>-->
-            <!--<button ion-item (click)="transactionDetails(transaction)" *ngFor="let transaction of toTransactions">
-                    <ion-label>
-                        <ion-grid>
-                            <ion-row padding-bottom>
-                                <span class="wrap-text"><b>From:</b> {{transaction.from}}</span>
-                            </ion-row>
-                            <ion-row>
-                                <ion-col no-padding>
-                                    <b>{{transaction.value}} tokens</b>
-                                </ion-col>
-                                <ion-col text-right no-padding>
-                                    <span class="grey-text">{{getDate(transaction.time)}}</span>
-                                </ion-col>
-                            </ion-row>
-                        </ion-grid>
-                    </ion-label>
-                </button>-->
         </div>
 
-        <ion-list *ngSwitchCase="'news'">
-            <button ion-item detail-none (click)="details = !details" class="news">
+        <ion-list *ngSwitchCase="'newsSection'">
+            <button ion-item detail-none (click)="openLink('https://medium.com/dispatchlabs')" class="news">
                 <ion-label>
                     <ion-grid>
                         <ion-row align-items-center>
-                            <ion-col col-auto class="profile-image">
-                                <img src="assets/imgs/default-icon.png">
+                            <ion-col col-2 class="profile-image">
+                                <img src="assets/imgs/medium.png" style="border-radius: 50%">
                             </ion-col>
-                            <ion-col>
+                            <ion-col col-10>
                                 <p>
-                                    This Is a Random News Article It’s Really Interesting and Important
+                                    Dispatch Labs is on Medium!
                                 </p>
                                 <p class="date">
-                                    March 4, 2018
                                 </p>
                             </ion-col>
                         </ion-row>
