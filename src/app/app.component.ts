@@ -62,7 +62,6 @@ export class MyApp {
         // this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
 
         this.statusBar.styleLightContent();
-
     }
 
     initializeApp() {

@@ -142,5 +142,4 @@ export class HomePage implements OnInit, OnDestroy {
     public openLink(url: string) {
         this.inAppBrowser.create(url,'_blank');
     }
-
 }
