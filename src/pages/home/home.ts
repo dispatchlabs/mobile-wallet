@@ -6,12 +6,31 @@ import {Config} from '../../store/states/config';
 import {AppState} from '../../app/app.state';
 import {Store} from '@ngrx/store';
 import {Transaction} from '../../store/states/transaction';
+import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
 
 @Component({
     selector: 'page-home',
-    templateUrl: 'home.html'
+    templateUrl: 'home.html',
 })
 export class HomePage implements OnInit, OnDestroy {
+
+    public options : InAppBrowserOptions = {
+        location : 'yes',
+        hidden : 'no', //Or  'yes'
+        clearcache : 'yes',
+        clearsessioncache : 'yes',
+        zoom : 'yes',//Android only ,shows browser zoom controls
+        hardwareback : 'yes',
+        mediaPlaybackRequiresUserAction : 'no',
+        shouldPauseOnSuspend : 'no', //Android only
+        closebuttoncaption : 'Close', //iOS only
+        disallowoverscroll : 'no', //iOS only
+        toolbar : 'yes', //iOS only
+        enableViewportScale : 'no', //iOS only
+        allowInlineMediaPlayback : 'no',//iOS only
+        presentationstyle : 'pagesheet',//iOS only
+        fullscreen : 'yes',//Windows only
+    };
 
     /**
      * Class level-declarations.
@@ -28,6 +47,7 @@ export class HomePage implements OnInit, OnDestroy {
     public transactionType: string;
     public currentTransactionHash: string;
     public value = 25000.83;
+    public url: string;
     @ViewChild(Content) content: Content;
 
     /**
@@ -36,7 +56,7 @@ export class HomePage implements OnInit, OnDestroy {
      * @param {Store<AppState>} store
      * @param {AppService} appService
      */
-    constructor(public navCtrl: NavController, private store: Store<AppState>, private appService: AppService) {
+    constructor(public navCtrl: NavController, private store: Store<AppState>, private appService: AppService, public inAppBrowser: InAppBrowser) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
@@ -100,10 +120,14 @@ export class HomePage implements OnInit, OnDestroy {
      *
      * @param {Transaction} transaction
      */
-    sendTokens(transaction: Transaction) {
+    public sendTokens(transaction: Transaction) {
         this.navCtrl.push('SendTokensPage');
     }
 
+    /**
+     *
+     * @param {Transaction} transaction
+     */
     public onDetailsClicked(transaction: Transaction): void {
         if (transaction.hash === this.currentTransactionHash) {
             this.currentTransactionHash = null;
@@ -111,4 +135,12 @@ export class HomePage implements OnInit, OnDestroy {
             this.currentTransactionHash = transaction.hash;
         }
     }
+
+    /**
+     *
+     */
+    public openLink(url: string) {
+        this.inAppBrowser.create(url,'_blank');
+    }
+
 }

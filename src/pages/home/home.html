@@ -31,7 +31,8 @@
 <ion-content padding>
     <ion-row class="home-tabs">
         <ion-col col-auto>
-            <a (click)="displaySection = 'transactionsSection'" [class.active]="displaySection === 'transactionsSection'">Transactions</a>
+            <a (click)="displaySection = 'transactionsSection'"
+               [class.active]="displaySection === 'transactionsSection'">Transactions</a>
         </ion-col>
         <ion-col col-auto>
             <a (click)="displaySection = 'newsSection'" [class.active]="displaySection === 'newsSection'">News</a>
@@ -47,15 +48,18 @@
                     <a (click)="transactionType = 'sent'" [class.active]="transactionType === 'sent'">Sent</a>
                 </ion-col>
                 <ion-col col-auto>
-                    <a (click)="transactionType = 'received'" [class.active]="transactionType === 'received'">received</a>
+                    <a (click)="transactionType = 'received'"
+                       [class.active]="transactionType === 'received'">received</a>
                 </ion-col>
             </ion-row>
             <div [ngSwitch]="transactionType">
                 <ion-list *ngSwitchCase="'all'">
-                    <button ion-item detail-none text-center *ngIf="(!toTransactions || toTransactions.length === 0) && (!fromTransactions || fromTransactions.length === 0)">
+                    <button ion-item detail-none text-center
+                            *ngIf="(!toTransactions || toTransactions.length === 0) && (!fromTransactions || fromTransactions.length === 0)">
                         No Transactions
                     </button>
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of toTransactions">
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
+                            *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -71,7 +75,7 @@
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount received">
-                                        +{{transaction.value  | number}}
+                                        +{{transaction.value | number}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
                                         <transaction-details [transaction]="transaction"></transaction-details>
@@ -81,7 +85,8 @@
                         </ion-label>
                     </button>
 
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of fromTransactions">
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
+                            *ngFor="let transaction of fromTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -97,7 +102,7 @@
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount sent">
-                                        -{{transaction.value  | number}}
+                                        -{{transaction.value | number}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
                                         <transaction-details [transaction]="transaction"></transaction-details>
@@ -112,7 +117,8 @@
                     <button ion-item detail-none text-center *ngIf="!fromTransactions || fromTransactions.length === 0">
                         No Transactions
                     </button>
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of fromTransactions">
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
+                            *ngFor="let transaction of fromTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -128,7 +134,7 @@
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount sent">
-                                        -{{transaction.value  | number}}
+                                        -{{transaction.value | number}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
                                         <transaction-details [transaction]="transaction"></transaction-details>
@@ -143,7 +149,8 @@
                     <button ion-item detail-none text-center *ngIf="!toTransactions || toTransactions.length === 0">
                         No Transactions
                     </button>
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of toTransactions">
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
+                            *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -159,7 +166,7 @@
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount received">
-                                        +{{transaction.value  | number}}
+                                        +{{transaction.value | number}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
                                         <transaction-details [transaction]="transaction"></transaction-details>
@@ -174,19 +181,18 @@
         </div>
 
         <ion-list *ngSwitchCase="'newsSection'">
-            <button ion-item detail-none (click)="details = !details" class="news">
+            <button ion-item detail-none (click)="openLink('https://medium.com/dispatchlabs')" class="news">
                 <ion-label>
                     <ion-grid>
                         <ion-row align-items-center>
                             <ion-col col-2 class="profile-image">
-                                <img src="assets/imgs/default-icon.png">
+                                <img src="assets/imgs/medium.png" style="border-radius: 50%">
                             </ion-col>
                             <ion-col col-10>
                                 <p>
-                                    This Is a Random News Article It’s Really Interesting and Important
+                                    Dispatch Labs is on Medium!
                                 </p>
                                 <p class="date">
-                                    March 4, 2018
                                 </p>
                             </ion-col>
                         </ion-row>
