@@ -83,14 +83,10 @@ export class AppService implements OnDestroy {
      * @param {string} privateKey
      */
     public newAccountWithPrivateKey(privateKey: string): void {
-        do {
-            crypto.getRandomValues(Buffer.from(privateKey, 'hex'));
-        } while (!secp256k1.privateKeyVerify(privateKey));
-        const publicKey = secp256k1.publicKeyCreate(privateKey, false);
-
+        const publicKey = secp256k1.publicKeyCreate(Buffer.from(privateKey, 'hex'), false);
         const account: Account = {
             address: Buffer.from(this.toAddress(publicKey)).toString('hex'),
-            privateKey: Buffer.from(privateKey).toString('hex'),
+            privateKey: privateKey,
             balance: 0,
             name: 'New Wallet'
         };

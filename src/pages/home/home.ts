@@ -41,6 +41,7 @@ export class HomePage implements OnInit, OnDestroy {
     public balance: number;
     public fromTransactions: Transaction[];
     public toTransactions: Transaction[];
+    public transactions: Transaction[];
     public appEventSubscription: any;
     public transaction: Transaction;
     public displaySection: string;
@@ -78,6 +79,7 @@ export class HomePage implements OnInit, OnDestroy {
      */
     ngOnInit() {
         this.content.resize();
+        this.refresh();
     }
 
     /**
@@ -92,7 +94,6 @@ export class HomePage implements OnInit, OnDestroy {
      *
      */
     public refresh(): void {
-        console.log(this.config.defaultAccount)
         if (!this.config.defaultAccount) {
             return;
         }
