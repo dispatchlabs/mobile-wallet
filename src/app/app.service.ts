@@ -1,14 +1,16 @@
 import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
-import {Http, RequestOptions, Headers} from '@angular/http';
 import 'rxjs/add/operator/map'
 import {Account} from '../store/states/account';
-import {ConfigAction} from '../store/redcuers/config.reducer';
+import {ConfigAction} from '../store/reducers/config.reducer';
 import * as keccak from 'keccak';
 import * as secp256k1 from 'secp256k1';
 import {Store} from '@ngrx/store';
 import {AppState} from './app.state';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../store/states/config';
+import {HttpClient} from '@angular/common/http';
+import {Transaction} from '../store/states/transaction';
+import {TransactionType} from '../store/states/transaction-type';
 
 declare const Buffer;
 
@@ -34,13 +36,16 @@ export class AppService implements OnDestroy {
 
     /**
      *
-     * @param {Http} http
+     * @param {HttpClient} httpClient
      * @param {Store<AppState>} store
      */
-    constructor(private http: Http, private store: Store<AppState>) {
+    constructor(private httpClient: HttpClient, private store: Store<AppState>) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
+        });
+        this.getDelegates().subscribe((response: any) => {
+            this.config.delegates = response.data;
         });
     }
 
@@ -53,29 +58,7 @@ export class AppService implements OnDestroy {
 
     /**
      *
-     * @param {string} url
-     * @returns {Observable<any>}
-     */
-    public get(url: string): any {
-        const headers = new Headers({'Content-Type': 'application/json'});
-        const requestOptions = new RequestOptions({headers: headers});
-        return this.http.get(url, requestOptions).map(response => response.json());
-    }
-
-    /**
-     *
-     * @param {string} url
-     * @param json
-     * @returns {any}
-     */
-    public post(url: string, json: any): any {
-        const headers = new Headers({'Content-Type': 'application/json'});
-        const requestOptions = new RequestOptions({headers: headers});
-        return this.http.post(url, JSON.stringify(json), requestOptions).map(response => response.json());
-    }
-
-    /**
-     *
+     * @returns {Account}
      */
     public generateNewAccount(): void {
         const privateKey = new Buffer(32);
@@ -90,9 +73,8 @@ export class AppService implements OnDestroy {
             balance: 0,
             name: 'New Wallet'
         };
-
-        this.config.defaultAccount = account;
         this.config.accounts.push(account);
+        this.config.defaultAccount = account;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
     }
 
@@ -116,5 +98,122 @@ export class AppService implements OnDestroy {
             address[i] = hash[i + 12];
         }
         return address;
+    }
+
+    /**
+     *
+     * @param {string} privateKey
+     * @param {Transaction} transaction
+     */
+    public hashAndSign(privateKey: string, transaction: Transaction): void {
+
+        // Set time.
+        transaction.time = new Date().getTime();
+
+        // Create hash.
+        let hash: any;
+        const from = Buffer.from(transaction.from, 'hex');
+        const to = Buffer.from(transaction.to, 'hex');
+        const value = this.numberToBuffer(transaction.value);
+        const time = this.numberToBuffer(transaction.time);
+
+        // Type?
+        switch (transaction.type) {
+            case TransactionType.TransferTokens:
+                hash = keccak('keccak256').update(Buffer.concat([Buffer.from('00', 'hex'), from, to, value, time])).digest();
+                break;
+            case TransactionType.DeploySmartContract:
+                const code = Buffer.from(transaction.code, 'hex');
+                hash = keccak('keccak256').update(Buffer.concat([Buffer.from('01', 'hex'), from, to, value, code, time])).digest();
+                break;
+            case TransactionType.ExecuteSmartContract:
+                const abi = this.stringToBuffer(transaction.abi);
+                const method = this.stringToBuffer(transaction.method);
+                hash = keccak('keccak256').update(Buffer.concat([Buffer.from('02', 'hex'), from, to, value, abi, method, time])).digest();
+                break;
+        }
+        transaction.hash = hash.toString('hex');
+
+        // Create signature.
+        const signature = secp256k1.sign(hash, Buffer.from(privateKey, 'hex'));
+        const signatureBytes = new Uint8Array(65);
+        for (let i = 0; i < 64; i++) {
+            signatureBytes[i] = signature.signature[i];
+        }
+        signatureBytes[64] = signature.recovery;
+        transaction.signature = new Buffer(signatureBytes).toString('hex');
+    }
+
+    /**
+     *
+     * @param {string} value
+     * @returns {any}
+     */
+    private stringToBuffer(value: string): any {
+        const bytes = [];
+        for (let i = 0; i < value.length; i++) {
+            bytes.push(value.charCodeAt(i));
+        }
+        return new Buffer(bytes);
+    }
+
+    /**
+     *
+     * @param {number} value
+     * @returns {any}
+     */
+    private numberToBuffer(value: number): any {
+        const bytes = [0, 0, 0, 0, 0, 0, 0, 0];
+        for (let i = 0; i < bytes.length; i++) {
+            const byte = value & 0xff;
+            bytes [i] = byte;
+            value = (value - byte) / 256;
+        }
+        return new Buffer(bytes);
+    }
+
+    /**
+     *
+     * @returns {any}
+     */
+    public getTransactionsFrom(): any {
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':' + this.config.delegates[0].endpoint.port + '/v1/transactions/from/' + this.config.defaultAccount.address;
+        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
+    }
+
+    /**
+     *
+     * @returns {any}
+     */
+    public getTransactionsTo(): any {
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':' + this.config.delegates[0].endpoint.port + '/v1/transactions/to/' + this.config.defaultAccount.address;
+        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
+    }
+
+    /**
+     *
+     * @returns {any}
+     */
+    public getStatus(id: string): any {
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':' + this.config.delegates[0].endpoint.port + '/v1/statuses/' + id;
+        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
+    }
+
+    /**
+     *
+     * @returns {any}
+     */
+    public getAccount(): any {
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':' + this.config.delegates[0].endpoint.port + '/v1/accounts/' + this.config.defaultAccount.address;
+        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
+    }
+
+    /**
+     *
+     * @returns {any}
+     */
+    public getDelegates(): any {
+        const url = 'http://' + this.config.seedNodeIp + '/v1/delegates';
+        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 }

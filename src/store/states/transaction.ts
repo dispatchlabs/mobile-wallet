@@ -7,14 +7,19 @@ export interface Transaction {
      * Interface level-declarations.
      */
     hash: string;
-    type: number;
+    type: any;
     from: string;
     to: string;
     value: number;
-    data: string;
-    gas: number;
-    time: number; // Milliseconds
+    code: string;
+    abi: string;
+    method: string;
+    params: any;
+    time: number;
     signature: string;
-    fromName: string; // Transient
-    toName: string; // Transient
+    hertz: number;
+    // Transients.
+    fromName: string;
+    toName: string;
 }
+

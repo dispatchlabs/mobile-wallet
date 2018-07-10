@@ -60,7 +60,6 @@ export class HomePage implements OnInit, OnDestroy {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
-            this.refresh();
         });
         this.appEventSubscription = this.appService.appEvents.subscribe((event: any) => {
             switch (event.type) {
@@ -93,13 +92,17 @@ export class HomePage implements OnInit, OnDestroy {
      *
      */
     public refresh(): void {
-        this.appService.get('http://' + this.config.seedNodeIp + '/v1/transactions/from/' + this.config.defaultAccount.address).subscribe(response => {
+        console.log(this.config.defaultAccount)
+        if (!this.config.defaultAccount) {
+            return;
+        }
+        this.appService.getTransactionsFrom().subscribe(response => {
             this.fromTransactions = response.data;
         });
-        this.appService.get('http://' + this.config.seedNodeIp + '/v1/transactions/to/' + this.config.defaultAccount.address).subscribe(response => {
+        this.appService.getTransactionsTo().subscribe(response => {
             this.toTransactions = response.data;
         });
-        this.appService.get('http://' + this.config.seedNodeIp + '/v1/accounts/' + this.config.defaultAccount.address).subscribe(response => {
+        this.appService.getAccount().subscribe(response => {
             if (response.status === 'Ok') {
                 this.balance = response.data.balance;
             }

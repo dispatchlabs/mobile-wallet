@@ -8,18 +8,17 @@ import {LoginPage} from '../pages/login/login';
 
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
-import {WalletPage} from '../pages/wallet/wallet';
 import {APP_CLEAR_ALL_STATES, AppService} from './app.service';
 import {ActionReducer, ActionReducerMap, MetaReducer, StoreModule} from '@ngrx/store';
 import {AppState} from './app.state';
-import {ConfigAction} from '../store/redcuers/config.reducer';
-import {HttpModule} from '@angular/http';
+import {ConfigAction} from '../store/reducers/config.reducer';
 import {Clipboard} from '@ionic-native/clipboard';
 import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ScreenOrientation} from '@ionic-native/screen-orientation';
 import {ComponentsModule} from '../components/components.module';
 import {InAppBrowser} from '@ionic-native/in-app-browser';
+import {HttpClientModule} from '@angular/common/http';
 
 export const KEY = 'df2380f2-f131-4c80-9dc0-eababfdf0d71';
 
@@ -56,14 +55,13 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         MyApp,
         HomePage,
         LoginPage,
-        WalletPage,
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         CommonModule,
         ComponentsModule,
-        HttpModule,
+        HttpClientModule,
         IonicModule.forRoot(MyApp),
         // NGRX
         StoreModule.forRoot(reducers, {metaReducers}),
@@ -73,7 +71,6 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         MyApp,
         HomePage,
         LoginPage,
-        WalletPage,
     ],
     providers: [
         StatusBar,

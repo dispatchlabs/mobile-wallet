@@ -5,16 +5,13 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {ScreenOrientation} from '@ionic-native/screen-orientation';
 
 import {HomePage} from '../pages/home/home';
-import {WalletPage} from '../pages/wallet/wallet';
 import {LoginPage} from '../pages/login/login';
 import {Observable} from 'rxjs/Observable';
 import {Config} from '../store/states/config';
 import {AppState} from './app.state';
 import {Store} from '@ngrx/store';
-import {Account} from '../store/states/account';
-import {ConfigAction} from '../store/redcuers/config.reducer';
-import * as keccak from 'keccak';
-import * as secp256k1 from 'secp256k1';
+import {ConfigAction} from '../store/reducers/config.reducer';
+import {AppService} from './app.service';
 
 declare const Buffer;
 
@@ -37,25 +34,36 @@ export class MyApp {
     @ViewChild('walletInfo')
     public walletInfo: any;
     public selectedAddress: string;
+    public selectedName: string;
     public disclaimer = true;
-
     rootPage: any = LoginPage;
-
     pages: Array<{ title: string, component: any }>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public screenOrientation: ScreenOrientation, private store: Store<AppState>,  public toastController: ToastController) {
+    /**
+     *
+     * @param {AppService} appService
+     * @param {Platform} platform
+     * @param {StatusBar} statusBar
+     * @param {SplashScreen} splashScreen
+     * @param {ScreenOrientation} screenOrientation
+     * @param {Store<AppState>} store
+     * @param {ToastController} toastController
+     */
+    constructor(private appService: AppService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public screenOrientation: ScreenOrientation, private store: Store<AppState>,  public toastController: ToastController) {
         this.initializeApp();
 
         // used for an example of ngFor and navigation
         this.pages = [
-            {title: 'Home', component: HomePage},
-            {title: 'Wallet', component: WalletPage},
+            {title: 'Home', component: HomePage}
         ];
 
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
-            this.selectedAddress = this.config.defaultAccount.address;
+            if (this.config.defaultAccount) {
+                this.selectedAddress = this.config.defaultAccount.address;
+                this.selectedName = this.config.defaultAccount.name;
+            }
         });
 
         // lock screen orientation to portrait, comment out for browser testing
@@ -85,25 +93,7 @@ export class MyApp {
      *
      */
     public generateNewAccount(): void {
-        const privateKey = new Buffer(32);
-        do {
-            crypto.getRandomValues(privateKey);
-        } while (!secp256k1.privateKeyVerify(privateKey));
-        const publicKey = secp256k1.publicKeyCreate(privateKey);
-        const hash = keccak('keccak256').update(publicKey).digest();
-        const address = new Buffer(20);
-        for (let i = 0; i < address.length; i++) {
-            address[i] = hash[i + 12];
-        }
-
-        const account: Account = {
-            address: Buffer.from(address).toString('hex'),
-            privateKey: Buffer.from(privateKey).toString('hex'),
-            balance: 0,
-            name: 'New Wallet'
-        };
-        this.config.accounts.push(account);
-        this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+        this.appService.generateNewAccount();
     }
 
     /**
@@ -111,7 +101,7 @@ export class MyApp {
      * @param {string} name
      */
     public onNameChange(name: string): void {
-        this.config.defaultAccount.name = name;
+        this.config.defaultAccount.name = this.selectedName = name;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
     }
 
@@ -152,11 +142,10 @@ export class MyApp {
      * @returns {string}
      */
     public getWalletInfoText(): string {
-        let text =
-            'Wallet Name:\n' + this.config.defaultAccount.name + '\n\n' +
-            'Private Key:\n' + this.config.defaultAccount.privateKey + '\n\n' +
-            'Address:\n' + this.config.defaultAccount.address;
-        return text;
+        if (!this.config.defaultAccount) {
+            return '';
+        }
 
+        return 'Wallet Name:\n' + this.config.defaultAccount.name + '\n\n' + 'Private Key:\n' + this.config.defaultAccount.privateKey + '\n\n' + 'Address:\n' + this.config.defaultAccount.address;
     }
 }

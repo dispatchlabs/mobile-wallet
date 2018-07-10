@@ -7,6 +7,7 @@ import {Config} from '../../store/states/config';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../app/app.state';
 import {APP_REFRESH, AppService} from '../../app/app.service';
+import {HttpClient} from '@angular/common/http';
 
 declare const Buffer;
 
@@ -41,8 +42,9 @@ export class SendTokensPage implements OnDestroy {
      * @param {AppService} appService
      * @param {Store<AppState>} store
      * @param {ToastController} toastController
+     * @param {HttpClient} httpClient
      */
-    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private store: Store<AppState>, private toastController: ToastController) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private store: Store<AppState>, private toastController: ToastController, private httpClient: HttpClient) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
@@ -102,7 +104,8 @@ export class SendTokensPage implements OnDestroy {
             signature: new Buffer(signature.signature).toString('hex') + '00',
         };
 
-        this.appService.post('http://' + this.config.seedNodeIp + '/v1/transactions', transaction).subscribe(response => {
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions';
+        this.httpClient.post(url, JSON.stringify(transaction), {headers: {'Content-Type': 'application/json'}}).subscribe ((response: any) => {
             this.id = response.id;
             this.getStatus();
         });
@@ -113,7 +116,7 @@ export class SendTokensPage implements OnDestroy {
      */
     private getStatus(): void {
         setTimeout(() => {
-            this.appService.get('http://' + this.config.seedNodeIp + '/v1/statuses/' + this.id).subscribe(response => {
+            this.appService.getStatus(this.id).subscribe(response => {
                 if (response.status === 'Pending') {
                     this.getStatus();
                     return;
