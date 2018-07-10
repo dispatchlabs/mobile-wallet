@@ -29,6 +29,7 @@ export class LoginPage implements OnInit, OnDestroy {
     public configSubscription: any;
     public privateKey: string;
     public keyHelper = KeyHelper;
+    public error: string;
 
     /**
      *
@@ -74,9 +75,10 @@ export class LoginPage implements OnInit, OnDestroy {
      */
     public onPaste(event: any): boolean {
         if (!/^[0-9a-fA-F]+$/.test(event.target.value)) {
-            console.log('invalid');
+            this.error = 'Invalid private key';
             return false;
         }
+        this.error = null;
         return true;
     }
 
