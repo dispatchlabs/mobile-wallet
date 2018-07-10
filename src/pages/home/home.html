@@ -42,9 +42,6 @@
         <div *ngSwitchCase="'transactionsSection'">
             <ion-row class="transaction-tabs">
                 <ion-col col-auto>
-                    <a (click)="transactionType = 'all'" [class.active]="transactionType === 'all'">All</a>
-                </ion-col>
-                <ion-col col-auto>
                     <a (click)="transactionType = 'sent'" [class.active]="transactionType === 'sent'">Sent</a>
                 </ion-col>
                 <ion-col col-auto>
@@ -53,65 +50,6 @@
                 </ion-col>
             </ion-row>
             <div [ngSwitch]="transactionType">
-                <ion-list *ngSwitchCase="'all'">
-                    <button ion-item detail-none text-center
-                            *ngIf="(!toTransactions || toTransactions.length === 0) && (!fromTransactions || fromTransactions.length === 0)">
-                        No Transactions
-                    </button>
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
-                            *ngFor="let transaction of toTransactions">
-                        <ion-label>
-                            <ion-grid>
-                                <ion-row align-items-center>
-                                    <ion-col col-2 class="profile-image">
-                                        <img src="assets/imgs/default-avatar.png">
-                                    </ion-col>
-                                    <ion-col>
-                                        <p class="date">
-                                            {{getDate(transaction.time)}}
-                                        </p>
-                                        <p class="event">
-                                            You received tokens
-                                        </p>
-                                    </ion-col>
-                                    <ion-col col-auto class="amount received">
-                                        +{{transaction.value | number}}
-                                    </ion-col>
-                                    <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
-                                        <transaction-details [transaction]="transaction"></transaction-details>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
-                        </ion-label>
-                    </button>
-
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
-                            *ngFor="let transaction of fromTransactions">
-                        <ion-label>
-                            <ion-grid>
-                                <ion-row align-items-center>
-                                    <ion-col col-2 class="profile-image">
-                                        <img src="assets/imgs/default-avatar.png">
-                                    </ion-col>
-                                    <ion-col>
-                                        <p class="date">
-                                            {{getDate(transaction.time)}}
-                                        </p>
-                                        <p class="event">
-                                            You sent tokens
-                                        </p>
-                                    </ion-col>
-                                    <ion-col col-auto class="amount sent">
-                                        -{{transaction.value | number}}
-                                    </ion-col>
-                                    <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
-                                        <transaction-details [transaction]="transaction"></transaction-details>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
-                        </ion-label>
-                    </button>
-                </ion-list>
 
                 <ion-list *ngSwitchCase="'sent'">
                     <button ion-item detail-none text-center *ngIf="!fromTransactions || fromTransactions.length === 0">
