@@ -3,7 +3,6 @@ import {Nav, Platform, ToastController} from 'ionic-angular';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {ScreenOrientation} from '@ionic-native/screen-orientation';
-
 import {HomePage} from '../pages/home/home';
 import {LoginPage} from '../pages/login/login';
 import {Observable} from 'rxjs/Observable';
@@ -12,8 +11,6 @@ import {AppState} from './app.state';
 import {Store} from '@ngrx/store';
 import {ConfigAction} from '../store/reducers/config.reducer';
 import {AppService} from './app.service';
-
-declare const Buffer;
 
 @Component({
     templateUrl: 'app.html',
@@ -92,8 +89,8 @@ export class MyApp {
     /**
      *
      */
-    public generateNewAccount(): void {
-        this.appService.generateNewAccount();
+    public newAccount(): void {
+        this.appService.newAccount();
     }
 
     /**

@@ -65,8 +65,12 @@ export class LoginPage implements OnInit, OnDestroy {
      *
      * @param {string} privateKey
      */
-    public onPrivateKeyChange(privateKey: string): void {
-        console.log(this.privateKey);
+    public onPrivateKeyChange(value: string): void {
+        this.privateKey = value;
+        if (this.privateKey.length === 40) {
+            this.appService.newAccountWithPrivateKey(this.privateKey);
+            this.navCtrl.setRoot(HomePage);
+        }
     }
 
     /**
@@ -74,11 +78,18 @@ export class LoginPage implements OnInit, OnDestroy {
      * @param event
      */
     public onPaste(event: any): boolean {
+        console.log(event)
         if (!/^[0-9a-fA-F]+$/.test(event.target.value)) {
             this.error = 'Invalid private key';
+            console.log('FOOK ME');
             return false;
         }
         this.error = null;
+        this.privateKey = event.target.value;
+        if (this.privateKey.length === 40) {
+            this.appService.newAccountWithPrivateKey(this.privateKey);
+            this.navCtrl.setRoot(HomePage);
+        }
         return true;
     }
 
@@ -86,7 +97,7 @@ export class LoginPage implements OnInit, OnDestroy {
      *
      */
     public next(): void {
-        this.appService.generateNewAccount();
+        this.appService.newAccount();
         this.navCtrl.setRoot(HomePage);
     }
 }

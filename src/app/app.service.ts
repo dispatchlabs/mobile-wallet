@@ -60,7 +60,7 @@ export class AppService implements OnDestroy {
      *
      * @returns {Account}
      */
-    public generateNewAccount(): void {
+    public newAccount(): void {
         const privateKey = new Buffer(32);
         do {
             crypto.getRandomValues(privateKey);
@@ -77,6 +77,29 @@ export class AppService implements OnDestroy {
         this.config.defaultAccount = account;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
     }
+
+    /**
+     *
+     * @param {string} privateKey
+     */
+    public newAccountWithPrivateKey(privateKey: string): void {
+        do {
+            crypto.getRandomValues(Buffer.from(privateKey, 'hex'));
+        } while (!secp256k1.privateKeyVerify(privateKey));
+        const publicKey = secp256k1.publicKeyCreate(privateKey, false);
+
+        const account: Account = {
+            address: Buffer.from(this.toAddress(publicKey)).toString('hex'),
+            privateKey: Buffer.from(privateKey).toString('hex'),
+            balance: 0,
+            name: 'New Wallet'
+        };
+        this.config.accounts.push(account);
+        this.config.defaultAccount = account;
+        this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+    }
+
+
 
     /**
      *
