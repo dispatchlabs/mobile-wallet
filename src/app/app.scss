@@ -224,6 +224,17 @@ ion-input {
   font-weight: 300;
 }
 
+.center {
+  text-align: center;
+}
+
+.error {
+  background: rgba(0,0,0,0.2);
+  border-radius: 30px;
+  color: deeppink;
+  padding: 10px;
+}
+
 .bar-button-default-ios {
   color: #FFF !important;
 }
