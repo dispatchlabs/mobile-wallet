@@ -10,7 +10,7 @@ import {Config} from '../store/states/config';
 import {AppState} from './app.state';
 import {Store} from '@ngrx/store';
 import {ConfigAction} from '../store/reducers/config.reducer';
-import {AppService} from './app.service';
+import {APP_REFRESH, AppService} from './app.service';
 
 @Component({
     templateUrl: 'app.html',
@@ -111,6 +111,7 @@ export class MyApp {
             if (account.address === address) {
                 this.config.defaultAccount = account;
                 this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+                this.appService.appEvents.emit({type: APP_REFRESH});
             }
         }
     }
