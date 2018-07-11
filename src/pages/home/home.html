@@ -55,8 +55,7 @@
                     <button ion-item detail-none text-center *ngIf="!fromTransactions || fromTransactions.length === 0">
                         No Transactions
                     </button>
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
-                            *ngFor="let transaction of fromTransactions">
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of fromTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -75,7 +74,7 @@
                                         -{{transaction.value | number}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
-                                        <transaction-details [transaction]="transaction"></transaction-details>
+                                        <transaction-details [sent]="true" [transaction]="transaction"></transaction-details>
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>
@@ -87,8 +86,7 @@
                     <button ion-item detail-none text-center *ngIf="!toTransactions || toTransactions.length === 0">
                         No Transactions
                     </button>
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
-                            *ngFor="let transaction of toTransactions">
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -107,7 +105,7 @@
                                         +{{transaction.value | number}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
-                                        <transaction-details [transaction]="transaction"></transaction-details>
+                                        <transaction-details [sent]="false" [transaction]="transaction"></transaction-details>
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>

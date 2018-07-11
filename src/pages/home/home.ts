@@ -97,7 +97,6 @@ export class HomePage implements OnInit, OnDestroy {
         }
         this.appService.getTransactionsFrom().subscribe(response => {
             this.fromTransactions = response.data;
-            console.log(this.fromTransactions);
         });
         this.appService.getTransactionsTo().subscribe(response => {
             this.toTransactions = response.data;
