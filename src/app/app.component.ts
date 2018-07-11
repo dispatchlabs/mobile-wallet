@@ -46,7 +46,7 @@ export class MyApp {
      * @param {Store<AppState>} store
      * @param {ToastController} toastController
      */
-    constructor(private appService: AppService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public screenOrientation: ScreenOrientation, private store: Store<AppState>,  public toastController: ToastController) {
+    constructor(private appService: AppService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public screenOrientation: ScreenOrientation, private store: Store<AppState>, public toastController: ToastController) {
         this.initializeApp();
 
         // used for an example of ngFor and navigation
@@ -112,6 +112,7 @@ export class MyApp {
                 this.config.defaultAccount = account;
                 this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
                 this.appService.appEvents.emit({type: APP_REFRESH});
+                return;
             }
         }
     }
