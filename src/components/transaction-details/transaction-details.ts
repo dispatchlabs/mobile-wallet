@@ -24,8 +24,6 @@ export class TransactionDetailsComponent {
      * @returns {string}
      */
     public getDate(time: number): string {
-        const date = (new Date(time)).toLocaleDateString();
-        return date;
+        return (new Date(time)).toLocaleDateString() + ' ' + (new Date(time)).toLocaleTimeString();
     }
-
 }

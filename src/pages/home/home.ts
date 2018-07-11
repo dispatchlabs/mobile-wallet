@@ -45,7 +45,7 @@ export class HomePage implements OnInit, OnDestroy {
     public appEventSubscription: any;
     public transaction: Transaction;
     public displaySection: string;
-    public transactionType: string;
+    public transactionType = 'sent';
     public currentTransactionHash: string;
     public value = 25000.83;
     public url: string;
@@ -70,9 +70,7 @@ export class HomePage implements OnInit, OnDestroy {
             }
         });
         this.displaySection = 'transactionsSection';
-        this.transactionType = 'all';
     }
-
 
     /**
      *
@@ -99,6 +97,7 @@ export class HomePage implements OnInit, OnDestroy {
         }
         this.appService.getTransactionsFrom().subscribe(response => {
             this.fromTransactions = response.data;
+            console.log(this.fromTransactions);
         });
         this.appService.getTransactionsTo().subscribe(response => {
             this.toTransactions = response.data;
@@ -116,8 +115,7 @@ export class HomePage implements OnInit, OnDestroy {
      * @returns {string}
      */
     public getDate(time: number): string {
-        const date = (new Date(time)).toLocaleDateString();
-        return date;
+        return (new Date(time)).toLocaleDateString() + ' ' + (new Date(time)).toLocaleTimeString();
     }
 
     /**

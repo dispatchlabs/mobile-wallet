@@ -196,7 +196,7 @@ export class AppService implements OnDestroy {
      * @returns {any}
      */
     public getTransactionsFrom(): any {
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':' + this.config.delegates[0].endpoint.port + '/v1/transactions/from/' + this.config.defaultAccount.address;
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions/from/' + this.config.defaultAccount.address;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 
@@ -205,7 +205,7 @@ export class AppService implements OnDestroy {
      * @returns {any}
      */
     public getTransactionsTo(): any {
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':' + this.config.delegates[0].endpoint.port + '/v1/transactions/to/' + this.config.defaultAccount.address;
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions/to/' + this.config.defaultAccount.address;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 
@@ -214,7 +214,7 @@ export class AppService implements OnDestroy {
      * @returns {any}
      */
     public getStatus(id: string): any {
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':' + this.config.delegates[0].endpoint.port + '/v1/statuses/' + id;
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/statuses/' + id;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 
@@ -223,7 +223,7 @@ export class AppService implements OnDestroy {
      * @returns {any}
      */
     public getAccount(): any {
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':' + this.config.delegates[0].endpoint.port + '/v1/accounts/' + this.config.defaultAccount.address;
+        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/accounts/' + this.config.defaultAccount.address;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 
