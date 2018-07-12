@@ -91,6 +91,7 @@ export class MyApp {
      */
     public newAccount(): void {
         this.appService.newAccount();
+        this.appService.appEvents.emit({type: APP_REFRESH});
     }
 
     /**
