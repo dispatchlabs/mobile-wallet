@@ -68,6 +68,12 @@ export class LoginPage implements OnInit, OnDestroy {
      */
     public onPrivateKeyChange(value: string): void {
         this.privateKey = value;
+        if (this.privateKey.startsWith('0x')) {
+            this.privateKey = this.privateKey.replace('0x', '');
+        }
+        if (this.privateKey.startsWith('0X')) {
+            this.privateKey = this.privateKey.replace('0X', '');
+        }
 
         // Valid privateKey (most likely from paste)?
         if (!/^[0-9a-fA-F]+$/.test(this.privateKey) && this.privateKey !== '' && this.privateKey !== null) {
