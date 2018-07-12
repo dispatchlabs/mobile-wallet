@@ -68,6 +68,14 @@ export class LoginPage implements OnInit, OnDestroy {
      */
     public onPrivateKeyChange(value: string): void {
         this.privateKey = value;
+
+        // Valid privateKey (most likely from paste)?
+        if (!/^[0-9a-fA-F]+$/.test(this.privateKey) && this.privateKey !== '' && this.privateKey !== null) {
+            this.privateKey = null;
+            this.error = 'Invalid private key';
+            return;
+        }
+
         if (this.privateKey.length === 64) {
             this.appService.newAccountWithPrivateKey(this.privateKey);
             this.navCtrl.setRoot(HomePage);
@@ -80,27 +88,6 @@ export class LoginPage implements OnInit, OnDestroy {
             return;
         }
         this.error = null;
-    }
-
-    /**
-     *
-     * @param event
-     */
-    public onPaste(event: any): boolean {
-        if (!/^[0-9a-fA-F]+$/.test(event.target.value) || event.target.value.length < 64) {
-            this.error = 'Invalid private key';
-            return false;
-        } else {
-            this.appService.newAccountWithPrivateKey(event.target.value);
-            this.navCtrl.setRoot(HomePage);
-            let toast = this.toastController.create({
-                message: 'Welcome to Dispatch Labs',
-                duration: 3000,
-                position: 'top'
-            });
-            toast.present();
-        }
-        return true;
     }
 
     /**
