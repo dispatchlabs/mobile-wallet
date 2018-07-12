@@ -13,7 +13,7 @@
                 <ion-item>
                     <ion-input [(ngModel)]="privateKey" (ngModelChange)="onPrivateKeyChange($event)" type="text" placeholder="Private Key" class="icon-input" (paste)="onPaste($event)"(keydown)="keyHelper.onHexKeyDown($event, 64)"></ion-input>
                 </ion-item>
-                <img src="assets/imgs/Key.svg" class="input-icon"/>
+                <div class="input-icon">0x</div>
                 <div *ngIf="error" class="error center">{{error}}</div>
             </ion-list>
         </ion-col>
