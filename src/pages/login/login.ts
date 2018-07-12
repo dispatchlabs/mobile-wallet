@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, ToastController} from 'ionic-angular';
 import {HomePage} from '../home/home';
 import {AppService} from '../../app/app.service';
 import {Config} from '../../store/states/config';
@@ -37,8 +37,9 @@ export class LoginPage implements OnInit, OnDestroy {
      * @param {NavParams} navParams
      * @param {AppService} appService
      * @param {Store<AppState>} store
+     * @param {ToastController} toastController
      */
-    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private store: Store<AppState>) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private store: Store<AppState>, private toastController: ToastController) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
@@ -68,14 +69,15 @@ export class LoginPage implements OnInit, OnDestroy {
     public onPrivateKeyChange(value: string): void {
         this.privateKey = value;
         if (this.privateKey.length === 64) {
-            if (!/^[0-9a-fA-F]+$/.test(this.privateKey)) {
-                this.error = "invalid private key";
-                return;
-            } else {
-                this.appService.newAccountWithPrivateKey(this.privateKey);
-                this.navCtrl.setRoot(HomePage);
-                return;
-            }
+            this.appService.newAccountWithPrivateKey(this.privateKey);
+            this.navCtrl.setRoot(HomePage);
+            let toast = this.toastController.create({
+                message: 'Welcome to Dispatch Labs',
+                duration: 3000,
+                position: 'top'
+            });
+            toast.present();
+            return;
         }
         this.error = null;
     }
@@ -85,11 +87,18 @@ export class LoginPage implements OnInit, OnDestroy {
      * @param event
      */
     public onPaste(event: any): boolean {
-        if (!/^[0-9a-fA-F]+$/.test(event.target.value) || event.target.value.length !== 40) {
+        if (!/^[0-9a-fA-F]+$/.test(event.target.value) || event.target.value.length < 64) {
             this.error = 'Invalid private key';
+            return false;
         } else {
             this.appService.newAccountWithPrivateKey(event.target.value);
             this.navCtrl.setRoot(HomePage);
+            let toast = this.toastController.create({
+                message: 'Welcome to Dispatch Labs',
+                duration: 3000,
+                position: 'top'
+            });
+            toast.present();
         }
         return true;
     }
