@@ -41,7 +41,8 @@ export class ConfigAction implements Action {
             delegates: null,
             defaultAccount: null,
             accounts: [],
-            transactions: null
+            fromTransactions: [],
+            toTransactions: []
         };
     }
 

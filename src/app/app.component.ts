@@ -30,11 +30,10 @@ export class MyApp {
     public configSubscription: any;
     @ViewChild('walletInfo')
     public walletInfo: any;
-    public selectedAddress: string;
-    public selectedName: string;
     public disclaimer = true;
     rootPage: any = LoginPage;
     pages: Array<{ title: string, component: any }>;
+    public selectedAddress: string;
 
     /**
      *
@@ -59,7 +58,6 @@ export class MyApp {
             this.config = config;
             if (this.config.defaultAccount) {
                 this.selectedAddress = this.config.defaultAccount.address;
-                this.selectedName = this.config.defaultAccount.name;
             }
         });
 
@@ -99,7 +97,7 @@ export class MyApp {
      * @param {string} name
      */
     public onNameChange(name: string): void {
-        this.config.defaultAccount.name = this.selectedName = name;
+        this.config.defaultAccount.name = name;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
     }
 

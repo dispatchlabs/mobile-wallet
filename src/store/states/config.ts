@@ -14,5 +14,6 @@ export interface Config {
     delegates: Node[];
     defaultAccount: Account;
     accounts: Account[];
-    transactions: Transaction[];
+    fromTransactions: Transaction[];
+    toTransactions: Transaction[];
 }

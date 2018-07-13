@@ -38,16 +38,11 @@ export class HomePage implements OnInit, OnDestroy {
     public configState: Observable<Config>;
     public config: Config;
     public configSubscription: any;
-    public balance: number;
-    public fromTransactions: Transaction[];
-    public toTransactions: Transaction[];
-    public transactions: Transaction[];
     public appEventSubscription: any;
     public transaction: Transaction;
     public displaySection: string;
     public transactionType = 'sent';
     public currentTransactionHash: string;
-    public value = 25000.83;
     public url: string;
     @ViewChild(Content) content: Content;
 
@@ -95,17 +90,7 @@ export class HomePage implements OnInit, OnDestroy {
         if (!this.config.defaultAccount) {
             return;
         }
-        this.appService.getTransactionsFrom().subscribe(response => {
-            this.fromTransactions = response.data;
-        });
-        this.appService.getTransactionsTo().subscribe(response => {
-            this.toTransactions = response.data;
-        });
-        this.appService.getAccount().subscribe(response => {
-            if (response.status === 'Ok') {
-                this.balance = response.data.balance;
-            }
-        });
+        this.appService.refreshDefaultAccount();
     }
 
     /**
