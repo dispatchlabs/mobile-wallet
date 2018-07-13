@@ -56,6 +56,18 @@ export class SendTokensPage implements OnDestroy {
             to: new FormControl('', Validators.compose([Validators.required, Validators.minLength(40), Validators.pattern(/^[0-9a-fA-F]+$/)])),
             tokens: new FormControl(0, Validators.compose([Validators.required, Validators.min(1)]))
         });
+        this.formGroup.get('to').valueChanges.subscribe(value => {
+            if (!value || value === '') {
+                return;
+            }
+
+            if (!/^[0-9a-fA-F]+$/.test(value) || value.length > 40) {
+                this.error = 'Invalid private key';
+                this.formGroup.get('to').setValue(null);
+                return;
+            }
+            this.error = null;
+        });
     }
 
     /**
@@ -75,6 +87,9 @@ export class SendTokensPage implements OnDestroy {
      *
      */
     public send(): void {
+        if (this.sending) {
+            return;
+        }
 
         // Create transaction.
         const transaction: Transaction = {
