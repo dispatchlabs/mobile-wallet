@@ -23,5 +23,12 @@
         <div *ngIf="error" class="error center">{{error}}</div>
     </ion-list>
 
-    <button ion-button [disabled]="!formGroup.valid || sending" (click)="send()" margin-top>Send</button>
+    <button ion-button [disabled]="!formGroup.valid || sending" (click)="send()" margin-top>
+        <span *ngIf="sending; else notSendingTemplate">
+            <ion-spinner name="crescent"></ion-spinner>
+        </span>
+        <ng-template #notSendingTemplate>
+            Send
+        </ng-template>
+    </button>
 </ion-content>
