@@ -34,6 +34,7 @@ export class SendTokensPage implements OnDestroy {
     public id: string;
     public keyHelper = KeyHelper;
     public formGroup: FormGroup;
+    public sending = false;
 
     /**
      *
@@ -83,6 +84,7 @@ export class SendTokensPage implements OnDestroy {
         } as any;
         this.appService.hashAndSign(this.config.defaultAccount.privateKey, transaction);
 
+        this.sending = true;
         const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions';
         this.httpClient.post(url, JSON.stringify(transaction), {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
             this.id = response.id;
@@ -101,6 +103,7 @@ export class SendTokensPage implements OnDestroy {
                     return;
                 }
 
+                this.sending = false;
                 let toast = this.toastController.create({
                     message: response.status === 'Ok' ? 'Tokens Sent' : response.status,
                     duration: 3000,
