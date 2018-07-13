@@ -14,12 +14,13 @@
 
     <ion-list [formGroup]="formGroup">
         <ion-item>
-            <ion-input formControlName="to" type="text" placeholder="To" class="icon-input" (keydown)="keyHelper.onHexKeyDown($event, 40)"></ion-input>
+            <ion-input formControlName="to" type="text" placeholder="To" class="icon-input" (keydown)="keyHelper.onHexKeyDown($event, 40)" (paste)="onPaste($event)"></ion-input>
         </ion-item>
         <div class="input-icon">0x</div>
         <ion-item>
-            <ion-input formControlName="tokens" type="number" placeholder="Tokens" text-center (keydown)="keyHelper.onNumericKeyDown($event, 9)"></ion-input>
+            <ion-input formControlName="tokens" type="number" placeholder="Tokens" text-center (keydown)="keyHelper.onNumericKeyDown($event, 9)" ></ion-input>
         </ion-item>
+        <div *ngIf="error" class="error center">{{error}}</div>
     </ion-list>
 
     <button ion-button [disabled]="!formGroup.valid" (click)="send()" margin-top>Send</button>

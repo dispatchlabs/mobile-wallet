@@ -35,6 +35,7 @@ export class SendTokensPage implements OnDestroy {
     public keyHelper = KeyHelper;
     public formGroup: FormGroup;
     public sending = false;
+    public error: string = null;
 
     /**
      *
