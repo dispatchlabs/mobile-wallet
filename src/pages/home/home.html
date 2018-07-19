@@ -20,10 +20,7 @@
     </ion-navbar>
     <div class="tokens">
         <p class="balance" *ngIf="config.defaultAccount">
-            {{config.defaultAccount.balance | number:'0.2'}}
-        </p>
-        <p class="value">
-            <!-- {{{{value | currency}} USD}} -->
+            {{config.defaultAccount.balance | number}}
         </p>
     </div>
 </ion-header>
