@@ -19,11 +19,8 @@
         </ion-row>
     </ion-navbar>
     <div class="tokens">
-        <p class="balance">
-            {{balance | number:'0.2'}}
-        </p>
-        <p class="value">
-            {{value | currency}} USD
+        <p class="balance" *ngIf="config.defaultAccount">
+            {{config.defaultAccount.balance | number}}
         </p>
     </div>
 </ion-header>
@@ -31,8 +28,7 @@
 <ion-content padding>
     <ion-row class="home-tabs">
         <ion-col col-auto>
-            <a (click)="displaySection = 'transactionsSection'"
-               [class.active]="displaySection === 'transactionsSection'">Transactions</a>
+            <a (click)="displaySection = 'transactionsSection'" [class.active]="displaySection === 'transactionsSection'">Transactions</a>
         </ion-col>
         <ion-col col-auto>
             <a (click)="displaySection = 'newsSection'" [class.active]="displaySection === 'newsSection'">News</a>
@@ -52,11 +48,10 @@
             <div [ngSwitch]="transactionType">
 
                 <ion-list *ngSwitchCase="'sent'">
-                    <button ion-item detail-none text-center *ngIf="!fromTransactions || fromTransactions.length === 0">
+                    <button ion-item detail-none text-center *ngIf="!config.fromTransactions || config.fromTransactions.length === 0">
                         No Transactions
                     </button>
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
-                            *ngFor="let transaction of fromTransactions">
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of config.fromTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -75,7 +70,7 @@
                                         -{{transaction.value | number}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
-                                        <transaction-details [transaction]="transaction"></transaction-details>
+                                        <transaction-details [sent]="true" [transaction]="transaction"></transaction-details>
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>
@@ -84,11 +79,10 @@
                 </ion-list>
 
                 <ion-list *ngSwitchCase="'received'">
-                    <button ion-item detail-none text-center *ngIf="!toTransactions || toTransactions.length === 0">
+                    <button ion-item detail-none text-center *ngIf="!config.toTransactions || config.toTransactions.length === 0">
                         No Transactions
                     </button>
-                    <button ion-item detail-none (click)="onDetailsClicked(transaction)"
-                            *ngFor="let transaction of toTransactions">
+                    <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of config.toTransactions">
                         <ion-label>
                             <ion-grid>
                                 <ion-row align-items-center>
@@ -107,7 +101,7 @@
                                         +{{transaction.value | number}}
                                     </ion-col>
                                     <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
-                                        <transaction-details [transaction]="transaction"></transaction-details>
+                                        <transaction-details [sent]="false" [transaction]="transaction"></transaction-details>
                                     </ion-col>
                                 </ion-row>
                             </ion-grid>

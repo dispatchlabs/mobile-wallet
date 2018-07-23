@@ -12,9 +12,17 @@ import {Component, Input} from '@angular/core';
 })
 export class TransactionDetailsComponent {
 
+    /**
+     *
+     */
     @Input()
     public transaction: any;
+    @Input()
+    public sent = true;
 
+    /**
+     *
+     */
     constructor() {
     }
 

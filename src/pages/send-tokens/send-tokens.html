@@ -12,15 +12,23 @@
         <img src="assets/imgs/oval-2@3x.png">
     </div>
 
-    <ion-list>
+    <ion-list [formGroup]="formGroup">
         <ion-item>
-            <ion-input [(ngModel)]="to" type="text" placeholder="Address" class="icon-input"></ion-input>
+            <ion-input formControlName="to" type="text" placeholder="To" class="icon-input" (keydown)="keyHelper.onHexKeyDown($event, 40)"></ion-input>
         </ion-item>
-        <img src="assets/imgs/Key.svg" class="input-icon"/>
+        <div class="input-icon">0x</div>
         <ion-item>
-            <ion-input [(ngModel)]="tokens" type="number" placeholder="Amount" text-center></ion-input>
+            <ion-input formControlName="tokens" type="number" placeholder="Tokens" text-center (keydown)="keyHelper.onNumericKeyDown($event, 9)" ></ion-input>
         </ion-item>
+        <div *ngIf="error" class="error center">{{error}}</div>
     </ion-list>
 
-    <button ion-button (click)="send()" margin-top>Send</button>
+    <button ion-button [disabled]="!formGroup.valid || sending" (click)="send()" margin-top>
+        <span *ngIf="sending; else notSendingTemplate">
+            <ion-spinner name="crescent"></ion-spinner>
+        </span>
+        <ng-template #notSendingTemplate>
+            Send
+        </ng-template>
+    </button>
 </ion-content>

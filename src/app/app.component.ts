@@ -10,7 +10,7 @@ import {Config} from '../store/states/config';
 import {AppState} from './app.state';
 import {Store} from '@ngrx/store';
 import {ConfigAction} from '../store/reducers/config.reducer';
-import {AppService} from './app.service';
+import {APP_REFRESH, AppService} from './app.service';
 
 @Component({
     templateUrl: 'app.html',
@@ -30,11 +30,10 @@ export class MyApp {
     public configSubscription: any;
     @ViewChild('walletInfo')
     public walletInfo: any;
-    public selectedAddress: string;
-    public selectedName: string;
     public disclaimer = true;
     rootPage: any = LoginPage;
     pages: Array<{ title: string, component: any }>;
+    public selectedAddress: string;
 
     /**
      *
@@ -46,7 +45,7 @@ export class MyApp {
      * @param {Store<AppState>} store
      * @param {ToastController} toastController
      */
-    constructor(private appService: AppService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public screenOrientation: ScreenOrientation, private store: Store<AppState>,  public toastController: ToastController) {
+    constructor(private appService: AppService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public screenOrientation: ScreenOrientation, private store: Store<AppState>, public toastController: ToastController) {
         this.initializeApp();
 
         // used for an example of ngFor and navigation
@@ -59,7 +58,6 @@ export class MyApp {
             this.config = config;
             if (this.config.defaultAccount) {
                 this.selectedAddress = this.config.defaultAccount.address;
-                this.selectedName = this.config.defaultAccount.name;
             }
         });
 
@@ -91,6 +89,7 @@ export class MyApp {
      */
     public newAccount(): void {
         this.appService.newAccount();
+        this.appService.appEvents.emit({type: APP_REFRESH});
     }
 
     /**
@@ -98,7 +97,7 @@ export class MyApp {
      * @param {string} name
      */
     public onNameChange(name: string): void {
-        this.config.defaultAccount.name = this.selectedName = name;
+        this.config.defaultAccount.name = name;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
     }
 
@@ -111,6 +110,8 @@ export class MyApp {
             if (account.address === address) {
                 this.config.defaultAccount = account;
                 this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+                this.appService.appEvents.emit({type: APP_REFRESH});
+                return;
             }
         }
     }

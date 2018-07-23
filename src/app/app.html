@@ -8,7 +8,7 @@
         </ion-row>
 
         <img src="assets/imgs/oval-2@3x.png">
-        <ion-input type="text" [(ngModel)]="selectedName" (ngModelChange)="onNameChange($event)"></ion-input>
+        <ion-input *ngIf="config.defaultAccount" type="text" [(ngModel)]="config.defaultAccount.name" (ngModelChange)="onNameChange($event)"></ion-input>
 
         <ion-row>
             <ion-col class="ellipsis">

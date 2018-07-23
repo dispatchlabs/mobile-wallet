@@ -1,26 +1,26 @@
 <table>
     <tr>
-        <th>
-            Time:
-        </th>
-        <th>
-            {{getDate(transaction.time)}}
-        </th>
-    </tr>
-    <tr>
         <td>
             Hash:
         </td>
         <td>
-            {{transaction.hash}}}}
+            {{transaction.hash}}
         </td>
     </tr>
-    <tr>
+    <tr *ngIf="sent">
+        <td>
+            To:
+        </td>
+        <td>
+            {{transaction.to}}
+        </td>
+    </tr>
+    <tr *ngIf="!sent">
         <td>
             From:
         </td>
         <td>
-            {{transaction.from}}
+        {{transaction.from}}
         </td>
     </tr>
     <tr>

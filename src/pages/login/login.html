@@ -11,9 +11,9 @@
             <h4 text-center>I have a wallet</h4>
             <ion-list>
                 <ion-item>
-                    <ion-input [(ngModel)]="privateKey" (ngModelChange)="onPrivateKeyChange($event)" type="text" placeholder="Private Key" class="icon-input" (keydown)="keyHelper.onHexKeyDown($event, 40)"></ion-input>
+                    <ion-input [(ngModel)]="privateKey" (ngModelChange)="onPrivateKeyChange($event)" type="text" placeholder="Private Key" class="icon-input" (keydown)="keyHelper.onHexKeyDown($event, 64)"></ion-input>
                 </ion-item>
-                <img src="assets/imgs/Key.svg" class="input-icon"/>
+                <div class="input-icon">0x</div>
                 <div *ngIf="error" class="error center">{{error}}</div>
             </ion-list>
         </ion-col>

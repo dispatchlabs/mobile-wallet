@@ -44,9 +44,7 @@ export class AppService implements OnDestroy {
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
         });
-        this.getDelegates().subscribe((response: any) => {
-            this.config.delegates = response.data;
-        });
+        this.getDelegates();
     }
 
     /**
@@ -94,8 +92,6 @@ export class AppService implements OnDestroy {
         this.config.defaultAccount = account;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
     }
-
-
 
     /**
      *
@@ -195,24 +191,6 @@ export class AppService implements OnDestroy {
      *
      * @returns {any}
      */
-    public getTransactionsFrom(): any {
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions/from/' + this.config.defaultAccount.address;
-        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
-    }
-
-    /**
-     *
-     * @returns {any}
-     */
-    public getTransactionsTo(): any {
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions/to/' + this.config.defaultAccount.address;
-        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
-    }
-
-    /**
-     *
-     * @returns {any}
-     */
     public getStatus(id: string): any {
         const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/statuses/' + id;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
@@ -220,11 +198,35 @@ export class AppService implements OnDestroy {
 
     /**
      *
-     * @returns {any}
      */
-    public getAccount(): any {
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/accounts/' + this.config.defaultAccount.address;
-        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
+    public refreshDefaultAccount(): void {
+        if (!this.config.defaultAccount) {
+            return;
+        }
+
+        // From transactions.
+        this.httpClient.get('http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions/from/' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
+            if (response.status === 'Ok') {
+                this.config.fromTransactions = response.data;
+                this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+            }
+        });
+
+        // To transactions.
+        this.httpClient.get('http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions/to/' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
+            if (response.status === 'Ok') {
+                this.config.toTransactions = response.data;
+                this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+            }
+        });
+
+        // Account.
+        this.httpClient.get('http://' + this.config.delegates[0].endpoint.host + ':1975/v1/accounts/' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
+            if (response.status === 'Ok') {
+                this.config.defaultAccount.balance = response.data.balance;
+                this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+            }
+        });
     }
 
     /**
@@ -232,7 +234,9 @@ export class AppService implements OnDestroy {
      * @returns {any}
      */
     public getDelegates(): any {
-        const url = 'http://' + this.config.seedNodeIp + '/v1/delegates';
-        return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
+        return this.httpClient.get('http://' + this.config.seedNodeIp + '/v1/delegates', {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
+            this.config.delegates = response.data;
+            this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+        });
     }
 }
