@@ -11,6 +11,7 @@ import {AppState} from './app.state';
 import {Store} from '@ngrx/store';
 import {ConfigAction} from '../store/reducers/config.reducer';
 import {APP_REFRESH, AppService} from './app.service';
+import {Clipboard} from '@ionic-native/clipboard';
 
 @Component({
     templateUrl: 'app.html',
@@ -45,7 +46,7 @@ export class MyApp {
      * @param {Store<AppState>} store
      * @param {ToastController} toastController
      */
-    constructor(private appService: AppService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public screenOrientation: ScreenOrientation, private store: Store<AppState>, public toastController: ToastController) {
+    constructor(private appService: AppService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public screenOrientation: ScreenOrientation, private store: Store<AppState>, public toastController: ToastController, private clipboard: Clipboard) {
         this.initializeApp();
 
         // used for an example of ngFor and navigation
@@ -118,10 +119,21 @@ export class MyApp {
 
     /**
      *
+     * @returns {string}
+     */
+    public getWalletInfoText(): string {
+        if (!this.config.defaultAccount) {
+            return '';
+        }
+
+        return 'Wallet Name:\n' + this.config.defaultAccount.name + '\n\n' + 'Private Key:\n' + this.config.defaultAccount.privateKey + '\n\n' + 'Address:\n' + this.config.defaultAccount.address;
+    }
+
+    /**
+     *
      */
     public copyToClipboard() {
-        this.walletInfo.nativeElement.select();
-        document.execCommand('Copy');
+        this.clipboard.copy(this.getWalletInfoText());
         let toast = this.toastController.create({
             message: 'Copied to clipboard!',
             duration: 3000,
@@ -133,17 +145,5 @@ export class MyApp {
         });
 
         toast.present();
-    }
-
-    /**
-     *
-     * @returns {string}
-     */
-    public getWalletInfoText(): string {
-        if (!this.config.defaultAccount) {
-            return '';
-        }
-
-        return 'Wallet Name:\n' + this.config.defaultAccount.name + '\n\n' + 'Private Key:\n' + this.config.defaultAccount.privateKey + '\n\n' + 'Address:\n' + this.config.defaultAccount.address;
     }
 }
