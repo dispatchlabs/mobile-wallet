@@ -54,7 +54,7 @@
                     <button ion-item detail-none (click)="onDetailsClicked(transaction)" *ngFor="let transaction of config.fromTransactions">
                         <ion-label>
                             <ion-grid>
-                                <ion-row align-items-center>
+                                <ion-row align-items-center *ngIf="transaction.type === 0">
                                     <ion-col col-2 class="profile-image">
                                         <img src="assets/imgs/default-avatar.png">
                                     </ion-col>
@@ -64,6 +64,25 @@
                                         </p>
                                         <p class="event">
                                             You sent tokens
+                                        </p>
+                                    </ion-col>
+                                    <ion-col col-auto class="amount sent">
+                                        -{{transaction.value | number}}
+                                    </ion-col>
+                                    <ion-col col-12 *ngIf="currentTransactionHash === transaction.hash" class="details">
+                                        <transaction-details [sent]="true" [transaction]="transaction"></transaction-details>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row align-items-center *ngIf="transaction.type === 1">
+                                    <ion-col col-2 class="profile-image">
+                                        <img src="assets/imgs/default-avatar.png">
+                                    </ion-col>
+                                    <ion-col>
+                                        <p class="date">
+                                            {{getDate(transaction.time)}}
+                                        </p>
+                                        <p class="event">
+                                            You deployed a contract
                                         </p>
                                     </ion-col>
                                     <ion-col col-auto class="amount sent">

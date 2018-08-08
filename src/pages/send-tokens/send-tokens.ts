@@ -86,27 +86,26 @@ export class SendTokensPage implements OnDestroy {
         this.appService.hashAndSign(this.config.defaultAccount.privateKey, transaction);
 
         this.sending = true;
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions';
+        const url = 'http://' + this.config.delegates[0].httpEndpoint.host + ':' + this.config.delegates[0].httpEndpoint.port +'/v1/transactions';
         this.httpClient.post(url, JSON.stringify(transaction), {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
-            this.id = response.id;
-            this.getStatus();
+            this.getStatus(transaction);
         });
     }
 
     /**
      *
      */
-    private getStatus(): void {
+    private getStatus(transaction: Transaction): void {
         setTimeout(() => {
-            this.appService.getStatus(this.id).subscribe(response => {
-                if (response.status === 'Pending') {
-                    this.getStatus();
+            this.appService.getStatus(transaction.hash).subscribe(response => {
+                if (response.data.status === 'Pending' || response.data.status === 'Not Found') {
+                    this.getStatus(transaction);
                     return;
                 }
 
                 this.sending = false;
                 let toast = this.toastController.create({
-                    message: response.status === 'Ok' ? 'Tokens Sent' : response.status,
+                    message: response.data.status === 'Ok' ? 'Tokens Sent' : response.status,
                     duration: 3000,
                     position: 'top'
                 });
