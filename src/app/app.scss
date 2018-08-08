@@ -84,35 +84,34 @@ ion-menu .scroll-content {
   .item-radio.item-md ion-label, .item-radio.item-ios ion-label {
     font-size: 11px;
   }
+}
+.copy-button {
+  position: relative;
+  width: 15px;
+  height: 15px;
 
-  .copy-button {
-    position: relative;
+  &:before {
+    content: '';
+    background: #777;
+    position: absolute;
     width: 15px;
     height: 15px;
+    border-radius: 5px;
+    border: 2px solid #222;
+    bottom: -4px;
+    right: -4px;
+  }
 
-    &:before {
-      content: '';
-      background: #777;
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      border-radius: 5px;
-      border: 2px solid #222;
-      bottom: -4px;
-      right: -4px;
-    }
-
-    &:after {
-      content: '';
-      background: #CCC;
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      border-radius: 5px;
-      border: 2px solid #222;
-      top: -4px;
-      left: -4px;
-    }
+  &:after {
+    content: '';
+    background: #CCC;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 5px;
+    border: 2px solid #222;
+    top: -4px;
+    left: -4px;
   }
 }
 

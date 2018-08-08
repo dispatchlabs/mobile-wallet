@@ -1,4 +1,7 @@
 import {Component, Input} from '@angular/core';
+import {ToastController} from 'ionic-angular';
+import {AppService} from '../../app/app.service';
+import {Clipboard} from '@ionic-native/clipboard';
 
 /**
  * Generated class for the TransactionDetailsComponent component.
@@ -23,7 +26,15 @@ export class TransactionDetailsComponent {
     /**
      *
      */
-    constructor() {
+    constructor(private appService: AppService, public toastController: ToastController, private clipboard: Clipboard) {
+    }
+
+    ngOnInit() {
+        if (this.transaction.type === 1) {
+            this.appService.getStatus(this.transaction.hash).subscribe(response => {
+                this.transaction.address = response.data.contractAddress;
+            });
+        }
     }
 
     /**
@@ -34,4 +45,22 @@ export class TransactionDetailsComponent {
     public getDate(time: number): string {
         return (new Date(time)).toLocaleDateString() + ' ' + (new Date(time)).toLocaleTimeString();
     }
+
+    /**
+     *
+     */
+    public copyContractAddressToClipboard() {
+        this.clipboard.copy(this.transaction.address);
+        let toast = this.toastController.create({
+            message: 'Copied to clipboard!',
+            duration: 3000,
+            position: 'top'
+        });
+
+        toast.onDidDismiss(() => {
+            console.log('Dismissed toast');
+        });
+
+        toast.present();
+    } 
 }

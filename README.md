@@ -15,7 +15,7 @@ If you want to view the app without cloning the project and running it locally:
 ### Clone and Start
 - `git clone https://github.com/dispatchlabs/mobile-wallet.git`<br>
 - `cd mobile-wallet`<br>
-- `ionic start`<br>
+- `ionic serve`<br>
 - Your web browser will automatically open to: `http://localhost:8100/`
 
 ### View the app on a mobile device

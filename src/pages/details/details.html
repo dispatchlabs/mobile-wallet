@@ -13,6 +13,10 @@
             <strong>Hash:</strong><br>
             {{transaction.hash}}
         </ion-row>
+        <ion-row *ngIf="transaction?.address">
+            <strong>Contract Address:</strong><br>
+            {{transaction.address}}
+        </ion-row>
         <ion-row>
             <strong>From Address:</strong>
             <br>{{transaction.from}}
