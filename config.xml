@@ -83,16 +83,18 @@
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.2.1" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.1.2" />
+    <plugin name="cordova-plugin-clipboard" spec="^1.0.0" />
+    <plugin name="cordova-clipboard" spec="^1.2.1" />
+    <allow-navigation href="http://192.168.42.65:8100" />
+    <allow-navigation href="http://10.20.3.36:8101" />
+    <engine name="ios" spec="4.5.4" />
+    <engine name="android" spec="7.0.0" />
     <plugin name="cordova-plugin-ionic" spec="^4.1.7">
-        <variable name="APP_ID" value="C00541E2" />
-        <variable name="CHANNEL_NAME" value="Production" />
-        <variable name="UPDATE_METHOD" value="auto" />
+        <variable name="APP_ID" value="c00541e2" />
+        <variable name="CHANNEL_NAME" value="Master" />
+        <variable name="UPDATE_METHOD" value="none" />
         <variable name="MAX_STORE" value="2" />
         <variable name="WARN_DEBUG" value="true" />
         <variable name="UPDATE_API" value="https://api.ionicjs.com" />
     </plugin>
-    <plugin name="cordova-plugin-clipboard" spec="^1.0.0" />
-    <plugin name="cordova-clipboard" spec="^1.2.1" />
-    <engine name="ios" spec="4.5.4" />
-    <engine name="android" spec="7.0.0" />
 </widget>
