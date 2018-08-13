@@ -132,18 +132,26 @@ export class MyApp {
     /**
      *
      */
-    public copyToClipboard() {
-        this.clipboard.copy(this.getWalletInfoText());
+    public copyAddressToClipboard() {
+        this.clipboard.copy(this.config.defaultAccount.address);
         let toast = this.toastController.create({
-            message: 'Copied to clipboard!',
+            message: 'Address copied to clipboard!',
             duration: 3000,
             position: 'top'
         });
+        toast.present();
+    }
 
-        toast.onDidDismiss(() => {
-            console.log('Dismissed toast');
+    /**
+     *
+     */
+    public copyPrivateKeyToClipboard() {
+        this.clipboard.copy(this.config.defaultAccount.privateKey);
+        let toast = this.toastController.create({
+            message: 'Private Key copied to clipboard!',
+            duration: 3000,
+            position: 'top'
         });
-
         toast.present();
     }
 }
