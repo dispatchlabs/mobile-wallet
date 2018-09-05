@@ -98,14 +98,14 @@ export class SendTokensPage implements OnDestroy {
     private getStatus(transaction: Transaction): void {
         setTimeout(() => {
             this.appService.getStatus(transaction.hash).subscribe(response => {
-                if (response.data.status === 'Pending' || response.data.status === 'Not Found') {
+                if (response.data.receipt.status === 'Pending' || response.data.receipt.status === 'Not Found') {
                     this.getStatus(transaction);
                     return;
                 }
 
                 this.sending = false;
                 let toast = this.toastController.create({
-                    message: response.data.status === 'Ok' ? 'Tokens Sent' : response.status,
+                    message: response.data.receipt.status === 'Ok' ? 'Tokens Sent' : response.status,
                     duration: 3000,
                     position: 'top'
                 });
