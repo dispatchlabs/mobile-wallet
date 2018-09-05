@@ -31,7 +31,7 @@ export class DetailsPage {
         this.transaction = navParams.data;
         if (this.transaction.type === 1) {
             this.appService.getStatus(this.transaction.hash).subscribe(response => {
-                this.transaction.address = response.data.contractAddress;
+                this.transaction.address = response.data.receipt.contractAddress;
             });
         }
     }

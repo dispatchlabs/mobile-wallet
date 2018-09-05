@@ -192,7 +192,7 @@ export class AppService implements OnDestroy {
      * @returns {any}
      */
     public getStatus(hash: string): any {
-        const url = 'http://' + this.config.delegates[0].httpEndpoint.host + ':' + this.config.delegates[0].httpEndpoint.port + '/v1/receipts/' + hash;
+        const url = 'http://' + this.config.delegates[0].httpEndpoint.host + ':' + this.config.delegates[0].httpEndpoint.port + '/v1/transactions/' + hash;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 
