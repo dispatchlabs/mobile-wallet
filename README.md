@@ -1,15 +1,8 @@
 ![alt dispatch](https://github.com/dispatchlabs/mobile-wallet/blob/master/src/assets/imgs/github-wallet-header.jpg)
 
-## ![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_remove_red_eye_black_24px.svg) View the App
-If you want to view the app without cloning the project and running it locally:
-1. Download the [Ionic View App](https://ionicframework.com/pro/view)![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_launch_black_18px.svg)
-2. Enter code: `2ba76232`
-
-*note: the Ionic view app is currently unavailable on iOS*
-
 ## ![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_directions_run_black_24px.svg) Setup and Run
 ### Prerequisites
-- Node `brew install node` 
+- Node `brew install node`
 - Ionic  `npm install -g ionic`
 
 ### Clone and Start
