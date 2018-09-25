@@ -249,8 +249,16 @@ ion-input {
   transform: scaleY(-1);
 }
 
+.mb0 {
+  margin-bottom: 0 !important;
+}
+
 .mt0 {
   margin-top: 0 !important;
+}
+
+.mt60 {
+  margin-top: 60px !important;
 }
 
 .my0 {
@@ -281,6 +289,16 @@ ion-input {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.bg-dark {
+  background: rgba(0,0,0,0.15);
+  border-radius: 4px;
+}
+
+.bg-white {
+  background: rgba(255,255,255,0.25);
+  border-radius: 4px;
 }
 
 .item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner, .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus):not(.item-input-has-focus) .item-inner {

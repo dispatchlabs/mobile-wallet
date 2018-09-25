@@ -47,7 +47,7 @@ export class SendTokensPage implements OnDestroy {
      * @param {HttpClient} httpClient
      * @param {FormBuilder} formBuilder
      */
-    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private store: Store<AppState>, private toastController: ToastController, private httpClient: HttpClient, formBuilder: FormBuilder) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private store: Store<AppState>, private toastController: ToastController, private httpClient: HttpClient, public formBuilder: FormBuilder) {
         this.configState = this.store.select('config');
         this.configSubscription = this.configState.subscribe((config: Config) => {
             this.config = config;
