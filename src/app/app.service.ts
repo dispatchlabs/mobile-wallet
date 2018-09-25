@@ -237,6 +237,7 @@ export class AppService implements OnDestroy {
         return this.httpClient.get('http://' + this.config.seedNodeIp + '/v1/delegates', {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
             this.config.delegates = response.data;
             this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+            this.refreshDefaultAccount();
         });
     }
 }

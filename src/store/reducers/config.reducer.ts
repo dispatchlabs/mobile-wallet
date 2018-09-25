@@ -1,6 +1,6 @@
 import {Action} from '@ngrx/store';
 import {Config} from '../states/config';
-import { ENV } from '@app/env';
+import {ENV} from '@app/env';
 
 /**
  *
