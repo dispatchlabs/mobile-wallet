@@ -91,6 +91,7 @@ export class AppService implements OnDestroy {
         this.config.accounts.push(account);
         this.config.defaultAccount = account;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+        this.refreshDefaultAccount();
     }
 
     /**
