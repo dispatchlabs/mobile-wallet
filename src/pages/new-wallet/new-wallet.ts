@@ -75,5 +75,12 @@ export class NewWalletPage {
     public newAccount(): void {
         this.appService.newAccount();
         this.appService.appEvents.emit({type: APP_REFRESH});
+        this.navCtrl.setRoot(HomePage);
+        let toast = this.toastController.create({
+            message: 'New Wallet Generated!',
+            duration: 3000,
+            position: 'top'
+        });
+        toast.present();
     }
 }
