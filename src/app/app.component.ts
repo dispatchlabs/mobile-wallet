@@ -81,7 +81,7 @@ export class MyApp {
             this.splashScreen.hide();
         });
     }
-
+  
     /**
      *
      * @param {string} name

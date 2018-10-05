@@ -10,7 +10,7 @@ If you want to view the app without cloning the project and running it locally:
 ## ![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_directions_run_black_24px.svg) Setup and Run
 ### Prerequisites
 - Node `brew install node` 
-- Ionic  `npm install -g ionic`
+- Ionic  `npm install ionic@3.20.0`
 
 ### Clone and Start
 - `git clone https://github.com/dispatchlabs/mobile-wallet.git`<br>
