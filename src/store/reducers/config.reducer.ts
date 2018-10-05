@@ -1,5 +1,6 @@
 import {Action} from '@ngrx/store';
 import {Config} from '../states/config';
+import {ENV} from '@app/env';
 
 /**
  *
@@ -37,7 +38,7 @@ export class ConfigAction implements Action {
      */
     public static getInitialState(): Config {
         return {
-            seedNodeIp: 'seed.dispatchlabs.io:1975',
+            seedNodeIp: ENV.seedNodeIp,
             delegates: null,
             defaultAccount: null,
             accounts: [],

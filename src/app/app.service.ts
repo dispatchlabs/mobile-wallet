@@ -91,6 +91,7 @@ export class AppService implements OnDestroy {
         this.config.accounts.push(account);
         this.config.defaultAccount = account;
         this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+        this.refreshDefaultAccount();
     }
 
     /**
@@ -131,6 +132,7 @@ export class AppService implements OnDestroy {
         const to = Buffer.from(transaction.to, 'hex');
         const value = this.numberToBuffer(transaction.value);
         const time = this.numberToBuffer(transaction.time);
+        const abi = this.stringToBuffer(transaction.abi || '');
 
         // Type?
         switch (transaction.type) {
@@ -139,10 +141,9 @@ export class AppService implements OnDestroy {
                 break;
             case TransactionType.DeploySmartContract:
                 const code = Buffer.from(transaction.code, 'hex');
-                hash = keccak('keccak256').update(Buffer.concat([Buffer.from('01', 'hex'), from, to, value, code, time])).digest();
+                hash = keccak('keccak256').update(Buffer.concat([Buffer.from('01', 'hex'), from, to, value, code, abi, time])).digest();
                 break;
             case TransactionType.ExecuteSmartContract:
-                const abi = this.stringToBuffer(transaction.abi);
                 const method = this.stringToBuffer(transaction.method);
                 hash = keccak('keccak256').update(Buffer.concat([Buffer.from('02', 'hex'), from, to, value, abi, method, time])).digest();
                 break;
@@ -191,8 +192,8 @@ export class AppService implements OnDestroy {
      *
      * @returns {any}
      */
-    public getStatus(id: string): any {
-        const url = 'http://' + this.config.delegates[0].endpoint.host + ':1975/v1/statuses/' + id;
+    public getStatus(hash: string): any {
+        const url = 'http://' + this.config.delegates[0].httpEndpoint.host + ':' + this.config.delegates[0].httpEndpoint.port + '/v1/transactions/' + hash;
         return this.httpClient.get(url, {headers: {'Content-Type': 'application/json'}});
     }
 
@@ -205,7 +206,7 @@ export class AppService implements OnDestroy {
         }
 
         // From transactions.
-        this.httpClient.get('http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions/from/' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
+        this.httpClient.get('http://' + this.config.delegates[0].httpEndpoint.host + ':' + this.config.delegates[0].httpEndpoint.port + '/v1/transactions?from=' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
             if (response.status === 'Ok') {
                 this.config.fromTransactions = response.data;
                 this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
@@ -213,7 +214,7 @@ export class AppService implements OnDestroy {
         });
 
         // To transactions.
-        this.httpClient.get('http://' + this.config.delegates[0].endpoint.host + ':1975/v1/transactions/to/' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
+        this.httpClient.get('http://' + this.config.delegates[0].httpEndpoint.host + ':' + this.config.delegates[0].httpEndpoint.port + '/v1/transactions?to=' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
             if (response.status === 'Ok') {
                 this.config.toTransactions = response.data;
                 this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
@@ -221,7 +222,7 @@ export class AppService implements OnDestroy {
         });
 
         // Account.
-        this.httpClient.get('http://' + this.config.delegates[0].endpoint.host + ':1975/v1/accounts/' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
+        this.httpClient.get('http://' + this.config.delegates[0].httpEndpoint.host + ':' + this.config.delegates[0].httpEndpoint.port + '/v1/accounts/' + this.config.defaultAccount.address, {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
             if (response.status === 'Ok') {
                 this.config.defaultAccount.balance = response.data.balance;
                 this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
@@ -237,6 +238,7 @@ export class AppService implements OnDestroy {
         return this.httpClient.get('http://' + this.config.seedNodeIp + '/v1/delegates', {headers: {'Content-Type': 'application/json'}}).subscribe((response: any) => {
             this.config.delegates = response.data;
             this.store.dispatch(new ConfigAction(ConfigAction.CONFIG_UPDATE, this.config));
+            this.refreshDefaultAccount();
         });
     }
 }

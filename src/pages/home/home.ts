@@ -14,22 +14,22 @@ import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
 })
 export class HomePage implements OnInit, OnDestroy {
 
-    public options : InAppBrowserOptions = {
-        location : 'yes',
-        hidden : 'no', //Or  'yes'
-        clearcache : 'yes',
-        clearsessioncache : 'yes',
-        zoom : 'yes',//Android only ,shows browser zoom controls
-        hardwareback : 'yes',
-        mediaPlaybackRequiresUserAction : 'no',
-        shouldPauseOnSuspend : 'no', //Android only
-        closebuttoncaption : 'Close', //iOS only
-        disallowoverscroll : 'no', //iOS only
-        toolbar : 'yes', //iOS only
-        enableViewportScale : 'no', //iOS only
-        allowInlineMediaPlayback : 'no',//iOS only
-        presentationstyle : 'pagesheet',//iOS only
-        fullscreen : 'yes',//Windows only
+    public options: InAppBrowserOptions = {
+        location: 'yes',
+        hidden: 'no', //Or  'yes'
+        clearcache: 'yes',
+        clearsessioncache: 'yes',
+        zoom: 'yes',//Android only ,shows browser zoom controls
+        hardwareback: 'yes',
+        mediaPlaybackRequiresUserAction: 'no',
+        shouldPauseOnSuspend: 'no', //Android only
+        closebuttoncaption: 'Close', //iOS only
+        disallowoverscroll: 'no', //iOS only
+        toolbar: 'yes', //iOS only
+        enableViewportScale: 'no', //iOS only
+        allowInlineMediaPlayback: 'no',//iOS only
+        presentationstyle: 'pagesheet',//iOS only
+        fullscreen: 'yes',//Windows only
     };
 
     /**
@@ -60,7 +60,7 @@ export class HomePage implements OnInit, OnDestroy {
         this.appEventSubscription = this.appService.appEvents.subscribe((event: any) => {
             switch (event.type) {
                 case APP_REFRESH:
-                    this.refresh();
+                    this.appService.refreshDefaultAccount();
                     return;
             }
         });
@@ -72,7 +72,6 @@ export class HomePage implements OnInit, OnDestroy {
      */
     ngOnInit() {
         this.content.resize();
-        this.refresh();
     }
 
     /**
@@ -81,16 +80,6 @@ export class HomePage implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.configSubscription.unsubscribe();
         this.appEventSubscription.unsubscribe();
-    }
-
-    /**
-     *
-     */
-    public refresh(): void {
-        if (!this.config.defaultAccount) {
-            return;
-        }
-        this.appService.refreshDefaultAccount();
     }
 
     /**
@@ -126,6 +115,6 @@ export class HomePage implements OnInit, OnDestroy {
      *
      */
     public openLink(url: string) {
-        this.inAppBrowser.create(url,'_blank');
+        this.inAppBrowser.create(url, '_blank');
     }
 }

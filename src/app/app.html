@@ -2,7 +2,7 @@
 
     <ion-content>
         <ion-row justify-content-end>
-            <div class="new-wallet" (click)="newAccount()">
+            <div class="new-wallet" (click)="newWallet()">
                 +
             </div>
         </ion-row>
@@ -15,7 +15,7 @@
                 {{selectedAddress}}
             </ion-col>
             <ion-col col-auto>
-                <div class="copy-button" (click)="copyToClipboard()"></div>
+                <div class="copy-button" (click)="copyAddressToClipboard()"></div>
             </ion-col>
         </ion-row>
 
@@ -25,9 +25,11 @@
                 <ion-radio [value]="account.address"></ion-radio>
             </ion-item>
         </ion-list>
-    </ion-content>
 
-    <textarea [value]="getWalletInfoText()" #walletInfo class="copy-target"></textarea>
+        <div class="key-copy-button">
+            <a (click)="copyPrivateKeyToClipboard()">Copy private key <span></span></a>
+        </div>
+    </ion-content>
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->

@@ -7,7 +7,15 @@
             {{transaction.hash}}
         </td>
     </tr>
-    <tr *ngIf="sent">
+    <tr *ngIf="transaction?.address">
+        <td>
+            Contract<br/>Address:
+        </td>
+        <td>
+            {{transaction.address}}
+        </td>
+    </tr>
+    <tr *ngIf="sent && transaction.to">
         <td>
             To:
         </td>

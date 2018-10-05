@@ -19,6 +19,12 @@ import {ScreenOrientation} from '@ionic-native/screen-orientation';
 import {ComponentsModule} from '../components/components.module';
 import {InAppBrowser} from '@ionic-native/in-app-browser';
 import {HttpClientModule} from '@angular/common/http';
+import {Pro} from '@ionic/pro';
+import {NewWalletPage} from '../pages/new-wallet/new-wallet';
+
+Pro.init('C00541E2', {
+    appVersion: '0.0.1'
+})
 
 export const KEY = 'df2380f2-f131-4c80-9dc0-eababfdf0d71';
 
@@ -55,6 +61,7 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         MyApp,
         HomePage,
         LoginPage,
+        NewWalletPage
     ],
     imports: [
         BrowserModule,
@@ -71,6 +78,7 @@ const metaReducers: MetaReducer<AppState>[] = [localStorageReducer];
         MyApp,
         HomePage,
         LoginPage,
+        NewWalletPage
     ],
     providers: [
         StatusBar,
