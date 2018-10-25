@@ -4,25 +4,41 @@ import React, {Component} from 'react';
 import {StyleSheet, NavigatorIOS, View, Button, Image, ScrollView, TextInput, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import crypto from 'react-native-crypto';
+import { Buffer } from 'buffer';
+import secp256k1 from 'secp256k1';
+import HomePage from './HomePage';
+
+
+// var DisNodeSDK = require('@dispatchlabs/disnode-sdk');
+
 
 export default class NewWalletPage extends Component<{}> {
 
 constructor(props) {
   super(props);
   this.state = {
-    passwrd: ''
+    passwrd: '',
+    account: '',
+    privkey: '',
   };
 }
 
 _onSubmit = (event) => {
   	this.setState({ passwrd: event.nativeEvent.text });
-}
-
-_temp = (event) => {
-  this.props.navigator.push({
+    let privateKey = new Buffer(32);
+    do {
+            privateKey = crypto.randomBytes(32);
+        } while (!secp256k1.privateKeyVerify(privateKey));
+        const publicKey = secp256k1.publicKeyCreate(privateKey, false);
+    this.setState({ account: Buffer.from(this.toAddress(publicKey)).toString('hex') });
+    this.setState({    privkey: Buffer.from(privateKey).toString('hex') });
+    this.props.navigator.push({
       component: HomePage,
       navigationBarHidden: true,
-          title: 'New Wallet',
+      title: 'Home',
+      passProps: { passwrd: this.passwrd,
+                   account: this.account,
+                   privkey: this.privkeys}
       });
 }
 

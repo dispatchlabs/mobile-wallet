@@ -6,19 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import NewWalletPage from './NewWallet';
 import ImportWalletPage from './ImportWallet';
 
-export default class LoginPage extends Component<{}> {
-
-	_sendTx = () => {
-		this.props.navigator.push({
-			component: ImportWalletPage,
-			navigationBarHidden: false,
-      		title: 'Import Wallet',
-    	});
-	}
-
-	_packageTx = () => {
-		
-	}
+export default class HomePage extends Component<{}> {
 
 	 render() {
 	 	return (
