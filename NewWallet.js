@@ -7,7 +7,7 @@ import crypto from 'react-native-crypto';
 import { Buffer } from 'buffer';
 import secp256k1 from 'secp256k1';
 import HomePage from './HomePage';
-
+import keccak from 'keccak';
 
 // var DisNodeSDK = require('@dispatchlabs/disnode-sdk');
 
@@ -22,6 +22,22 @@ constructor(props) {
     privkey: '',
   };
 }
+ _toAddress = (publicKey) => {
+        // Hash publicKey.
+        const hashablePublicKey = new Buffer(publicKey.length - 1);
+        for (let i = 0; i < hashablePublicKey.length; i++) {
+            hashablePublicKey[i] = publicKey[i + 1];
+        }
+        const hash = keccak('keccak256').update(hashablePublicKey).digest();
+
+        // Create address.
+        const address = new Buffer(20);
+        for (let i = 0; i < address.length; i++) {
+            address[i] = hash[i + 12];
+        }
+        return address;
+    }
+
 
 _onSubmit = (event) => {
   	this.setState({ passwrd: event.nativeEvent.text });
@@ -30,7 +46,7 @@ _onSubmit = (event) => {
             privateKey = crypto.randomBytes(32);
         } while (!secp256k1.privateKeyVerify(privateKey));
         const publicKey = secp256k1.publicKeyCreate(privateKey, false);
-    this.setState({ account: Buffer.from(this.toAddress(publicKey)).toString('hex') });
+    this.setState({ account: Buffer.from(this._toAddress(publicKey)).toString('hex') });
     this.setState({    privkey: Buffer.from(privateKey).toString('hex') });
     this.props.navigator.push({
       component: HomePage,
