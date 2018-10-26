@@ -22,6 +22,21 @@ constructor(props) {
     privkey: '',
   };
 }
+
+ _encrypt= (data, key) => {
+    var algorithm = "aes256";
+    var encoding = "base64";
+    var cipher = crypto.createCipher(algorithm, key);
+    return cipher.update(data, "utf8", encoding) + cipher.final(encoding);
+}
+
+_decrypt = (data, key) => {
+    var algorithm = "aes256";
+    var encoding = "base64";
+    var decipher = crypto.createDecipher(algorithm, key);
+    return decipher.update(data, encoding, "utf8") + decipher.final("utf8");
+}
+
  _toAddress = (publicKey) => {
         // Hash publicKey.
         const hashablePublicKey = new Buffer(publicKey.length - 1);
@@ -40,14 +55,16 @@ constructor(props) {
 
 
 _onSubmit = (event) => {
-  	this.setState({ passwrd: event.nativeEvent.text });
+  	this.setState({ passwrd: event.nativeEvent.text }, function(newState) {
+
     let privateKey = new Buffer(32);
     do {
             privateKey = crypto.randomBytes(32);
         } while (!secp256k1.privateKeyVerify(privateKey));
         const publicKey = secp256k1.publicKeyCreate(privateKey, false);
     this.setState({ account: Buffer.from(this._toAddress(publicKey)).toString('hex') });
-    this.setState({    privkey: Buffer.from(privateKey).toString('hex') });
+    this.setState({ privkey: Buffer.from(privateKey).toString('hex') });
+    var encryptedData = this._encrypt(Buffer.from(privateKey).toString('hex'), this.state.passwrd);
     this.props.navigator.push({
       component: HomePage,
       navigationBarHidden: true,
@@ -56,6 +73,7 @@ _onSubmit = (event) => {
                    account: this.account,
                    privkey: this.privkeys}
       });
+    }.bind(this));
 }
 
  render() {

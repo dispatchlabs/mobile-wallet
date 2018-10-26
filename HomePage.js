@@ -12,6 +12,7 @@ export default class HomePage extends Component<{}> {
 	 	return (
 	<LinearGradient start={{x: 1, y: 0}} end={{x: 0, y: 1}} colors={['#2C2E8B', '#74298C', '#D2508D']} style={styles.container}>
 
+	
 
 	</LinearGradient>
 	)}
