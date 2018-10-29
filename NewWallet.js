@@ -9,7 +9,6 @@ import secp256k1 from 'secp256k1';
 import HomePage from './HomePage';
 import keccak from 'keccak';
 
-// var DisNodeSDK = require('@dispatchlabs/disnode-sdk');
 
 
 export default class NewWalletPage extends Component<{}> {
@@ -18,7 +17,7 @@ constructor(props) {
   super(props);
   this.state = {
     passwrd: '',
-    account: '',
+    address: '',
     privkey: '',
   };
 }
@@ -28,13 +27,6 @@ constructor(props) {
     var encoding = "base64";
     var cipher = crypto.createCipher(algorithm, key);
     return cipher.update(data, "utf8", encoding) + cipher.final(encoding);
-}
-
-_decrypt = (data, key) => {
-    var algorithm = "aes256";
-    var encoding = "base64";
-    var decipher = crypto.createDecipher(algorithm, key);
-    return decipher.update(data, encoding, "utf8") + decipher.final("utf8");
 }
 
  _toAddress = (publicKey) => {
@@ -62,16 +54,15 @@ _onSubmit = (event) => {
             privateKey = crypto.randomBytes(32);
         } while (!secp256k1.privateKeyVerify(privateKey));
         const publicKey = secp256k1.publicKeyCreate(privateKey, false);
-    this.setState({ account: Buffer.from(this._toAddress(publicKey)).toString('hex') });
-    this.setState({ privkey: Buffer.from(privateKey).toString('hex') });
+    this.setState({ address: Buffer.from(this._toAddress(publicKey)).toString('hex') });
     var encryptedData = this._encrypt(Buffer.from(privateKey).toString('hex'), this.state.passwrd);
     this.props.navigator.push({
       component: HomePage,
       navigationBarHidden: true,
       title: 'Home',
-      passProps: { passwrd: this.passwrd,
-                   account: this.account,
-                   privkey: this.privkeys}
+      passProps: { 
+                   address: this.address,
+                   privkey: encryptedData}
       });
     }.bind(this));
 }
@@ -88,12 +79,12 @@ _onSubmit = (event) => {
   				<TextInput
     				style={styles.searchInput}
     				placeholder='supa secrt passwerd'
-    				placeholderTextColor = 'rgba(255, 2555, 255, 0.5)'
+    				placeholderTextColor = 'rgba(255, 255, 255, 0.5)'
     				secureTextEntry = {true}
     				textAlign={'center'}
     				onSubmitEditing={(event) =>  this._onSubmit(event)}
     				/>
-    			<View style={styles.line} />
+    			<View style={styles.line}/>
 			</View>
 
 
