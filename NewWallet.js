@@ -54,16 +54,17 @@ _onSubmit = (event) => {
             privateKey = crypto.randomBytes(32);
         } while (!secp256k1.privateKeyVerify(privateKey));
         const publicKey = secp256k1.publicKeyCreate(privateKey, false);
-    this.setState({ address: Buffer.from(this._toAddress(publicKey)).toString('hex') });
+    this.setState({ address: this._toAddress(publicKey).toString('hex') }, function(newState) {
     var encryptedData = this._encrypt(Buffer.from(privateKey).toString('hex'), this.state.passwrd);
     this.props.navigator.push({
       component: HomePage,
       navigationBarHidden: true,
       title: 'Home',
       passProps: { 
-                   address: this.address,
+                   address: this.state.address,
                    privkey: encryptedData}
       });
+    }.bind(this));
     }.bind(this));
 }
 

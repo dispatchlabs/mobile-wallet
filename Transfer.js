@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Buffer } from 'buffer';
 import secp256k1 from 'secp256k1';
 import keccak from 'keccak';
+import crypto from 'react-native-crypto';
 
 
 
@@ -17,6 +18,7 @@ constructor(props) {
     to: '',
     value: '',
     passwrd: '',
+    status: '',
   };
 }
 
@@ -36,14 +38,24 @@ _stringToBuffer = (value) => {
     }
 
 _numberToBuffer = (value) => {
-        const bytes = [0, 0, 0, 0, 0, 0, 0, 0];
+        let bytes = [0, 0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < bytes.length; i++) {
-            const byte = value & 0xff;
+            let byte = value & 0xff;
             bytes [i] = byte;
             value = (value - byte) / 256;
         }
-        return new Buffer(bytes);
+        return Buffer.from(bytes);
     }
+
+_getInt64Bytes = ( x ) => {
+    var bytes = [];
+    var i = 8;
+    do {
+    bytes[--i] = x & (255);
+    x = x>>8;
+    } while ( i )
+    return new Buffer(bytes);
+}
 
 _onToChanged = (event) => {
 	this.setState({ to: event.nativeEvent.text });
@@ -53,31 +65,71 @@ _onValueChanged = (event) => {
 	this.setState({ value: event.nativeEvent.text });
 }
 
-_packageTx = () => {
-	let now = new Date().getTime();
-	console.log(this.props.address);
-	const from = this._stringToBuffer(this.props.address);
-    const to = this._stringToBuffer(this.state.to);
-    const value = this._numberToBuffer(this.state.value);
-    const time = this._numberToBuffer(now);
 
-    hash = keccak('keccak256').update(Buffer.concat([Buffer.from('00', 'hex'), from, to, value, time])).digest();
-    privateKey = this._decrypt(this.props.privkey, this.state.passwrd);
-    const signature = secp256k1.sign(hash, Buffer.from(privateKey, 'hex'));
-    const signatureBytes = new Uint8Array(65);
+_sendTx = (event) => {
+	this.setState({ passwrd: event.nativeEvent.text }, function(newState) {
+		let now = new Date().getTime();
+		const from = Buffer.from(this.props.address, 'hex');
+    	const to = Buffer.from(this.state.to, 'hex');
+    	const val = parseInt(this.state.value,10)
+   		const value = this._numberToBuffer(val);
+    	const time = this._numberToBuffer(now);
+
+    	const hash = keccak('keccak256').update(Buffer.concat([Buffer.from('00', 'hex'), from, to, value, time])).digest();
+    	const privateKey = this._decrypt(this.props.privkey, this.state.passwrd);
+    	const signature = secp256k1.sign(hash, Buffer.from(privateKey, 'hex'));
+    	const signatureBytes = new Uint8Array(65);
         for (let i = 0; i < 64; i++) {
             signatureBytes[i] = signature.signature[i];
         }
         signatureBytes[64] = signature.recovery;
-    const sig = new Buffer(signatureBytes).toString('hex');
-}
+    	const sig = new Buffer(signatureBytes).toString('hex');
+    
+    	
+    	console.log(hash.toString('hex'));
+    	console.log(hash.toString('hex'));
+    	console.log(hash);
+    	console.log(Buffer.from('00', 'hex'));
+    	console.log(from);
+    	console.log(to);
+    	console.log(value);
+    	console.log(time);
+    	console.log(Buffer.concat([Buffer.from('00', 'hex'), from, to, value, time]));
 
-_sendTx = (event) => {
-	this.setState({ passwrd: event.nativeEvent.text }, function(newState) {
-		this._packageTx();
-
+    	fetch('http://127.0.0.1:3500/v1/transactions', {
+  			method: 'POST',
+  			headers: {
+    			Accept: 'application/json',
+    			'Content-Type': 'application/json',
+  			},
+  			body: JSON.stringify({
+				hash: hash.toString('hex'),
+			    type: 0,
+			    from: this.props.address,
+			    to: this.state.to,
+			    value: val,
+			    time: now,
+			    signature: sig,
+			    hertz: "0",
+ 			}),
+			}).then(response => response.json())
+  			.then(json => this._handleTxResponse(json))
+  			.catch();
 	}.bind(this));
 }
+
+_handleTxResponse = (response) => {
+console.log('please');
+console.log('make');
+console.log('way');
+console.log('for');
+console.log('me');
+	console.log('first');
+console.log(response.status);
+console.log(response.humanReadableStatus);
+
+
+};
 
 _executeBalanceQuery = (query) => {
   fetch(query)
@@ -87,7 +139,18 @@ _executeBalanceQuery = (query) => {
 };
 
 _handleBalanceResponse = (response) => {
-  this.setState({ balance: response.balance });
+  if (response.status == 'status: ok'){
+	this.props.navigator.push({
+      component: TransferPage,
+      navigationBarHidden: false,
+      title: 'Transfer',
+      passProps: { address: this.props.address,
+                   privkey: this.props.privkey}
+      });
+
+  }
+
+
 };
 
 render() {

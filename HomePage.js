@@ -95,6 +95,7 @@ _renderItem = ({item, index}) => (
 	<LinearGradient start={{x: 1, y: 0}} end={{x: 0, y: 1}} colors={['#2C2E8B', '#74298C', '#D2508D']} style={styles.container}>
 
 	<View style={styles.balance}>
+		<Text style={styles.btitle}>Balance</Text>
 		<Text style={styles.balanceText} adjustsFontSizeToFit minimumFontScale={.5} numberOfLines={1}>{this.state.balance}</Text>
 		<View style={styles.line}/>
 	</View>
@@ -218,5 +219,10 @@ container: {
   txList: {
   	marginTop:'9%',
   	height: '70%',
+  },
+  btitle: {
+	fontSize: 40,
+    color: 'black',
+    textAlign: "center",
   },
 });
