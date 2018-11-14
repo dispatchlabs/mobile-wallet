@@ -1,13 +1,39 @@
 'use strict'
 
 import React, {Component} from 'react';
-import {ActivityIndicator, ScrollView, StyleSheet, FlatList, NavigatorIOS, View, Button, Image,Text, TouchableHighlight} from 'react-native';
+import {AsyncStorage, ActivityIndicator, ScrollView, StyleSheet, FlatList, NavigatorIOS, View, Button, Image,Text, TouchableHighlight} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import NewWalletPage from './NewWallet';
 import ImportWalletPage from './ImportWallet';
 import ActionButton from 'react-native-circular-action-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import TransferPage from './Transfer';
+
+export async function saveItem(key, value){
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
+  }
+};
+
+
+export async function getItem(key){
+  let item;
+  try {
+
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      // We have data!!
+      item = JSON.parse(value);
+    }
+  } catch (error) {
+    // Error retrieving data
+    item = 'none';
+    console.log(error.message);
+  }
+  return item;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Main Class
@@ -38,8 +64,8 @@ _toTransfer = () => {
 }
 
 _initfunc(){
-	this._executeTxsQuery('http://35.233.231.3:1975/v1/transactions');
-	this._executeBalanceQuery('http://35.233.231.3:1975/v1/accounts/'+this.props.account); //+this.props.account ce31cdd5938370925e159eba18867b2a696137ae
+	this._executeTxsQuery('http://127.0.0.1:3500/v1/transactions');
+	this._executeBalanceQuery('http://127.0.0.1:3500/v1/accounts/'+this.props.address); //+this.props.account ce31cdd5938370925e159eba18867b2a696137ae
 }
 
 _executeBalanceQuery = (query) => {
@@ -95,7 +121,7 @@ _renderItem = ({item, index}) => (
 	<LinearGradient start={{x: 1, y: 0}} end={{x: 0, y: 1}} colors={['#2C2E8B', '#74298C', '#D2508D']} style={styles.container}>
 
 	<View style={styles.balance}>
-		<Text style={styles.btitle}>Balance</Text>
+		<Text style={styles.btitle}>{this.props.walletName}</Text>
 		<Text style={styles.balanceText} adjustsFontSizeToFit minimumFontScale={.5} numberOfLines={1}>{this.state.balance}</Text>
 		<View style={styles.line}/>
 	</View>

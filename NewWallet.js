@@ -1,13 +1,14 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {StyleSheet, NavigatorIOS, View, Button, Image, ScrollView, TextInput, Text} from 'react-native';
+import { AsyncStorage, StyleSheet, NavigatorIOS, View, Button, Image, ScrollView, TextInput, Text} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import crypto from 'react-native-crypto';
 import { Buffer } from 'buffer';
 import secp256k1 from 'secp256k1';
-import HomePage from './HomePage';
+import HomePage, {saveItem, getItem} from './HomePage';
 import keccak from 'keccak';
+
 
 
 
@@ -29,6 +30,8 @@ constructor(props) {
     return cipher.update(data, "utf8", encoding) + cipher.final(encoding);
 }
 
+ 
+
  _toAddress = (publicKey) => {
         // Hash publicKey.
         const hashablePublicKey = new Buffer(publicKey.length - 1);
@@ -48,21 +51,33 @@ constructor(props) {
 
 _onSubmit = (event) => {
   	this.setState({ passwrd: event.nativeEvent.text }, function(newState) {
+      let wallet = {
+        nickname: '',
+        address: '',
+        privateKey: '',
+      }; 
 
     let privateKey = new Buffer(32);
     do {
             privateKey = crypto.randomBytes(32);
         } while (!secp256k1.privateKeyVerify(privateKey));
         const publicKey = secp256k1.publicKeyCreate(privateKey, false);
-    this.setState({ address: this._toAddress(publicKey).toString('hex') }, function(newState) {
-    var encryptedData = this._encrypt(Buffer.from(privateKey).toString('hex'), this.state.passwrd);
+    this.setState({ address: this._toAddress(publicKey).toString('hex') }, async function(newState) {
+    wallet.nickname = 'wallet1';
+    wallet.address = this.state.address;
+    wallet.privateKey = await this._encrypt(Buffer.from(privateKey).toString('hex'), this.state.passwrd);
+  
+    saveItem("wallet.nickname", wallet);
+    saveItem('defaultWallet', wallet);
     this.props.navigator.push({
       component: HomePage,
       navigationBarHidden: true,
       title: 'Home',
       passProps: { 
-                   address: this.state.address,
-                   privkey: encryptedData}
+                   walletName: wallet.nickname,
+                   address: wallet.address,
+                   privkey: wallet.privateKey
+                 }
       });
     }.bind(this));
     }.bind(this));

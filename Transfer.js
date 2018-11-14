@@ -71,12 +71,15 @@ _sendTx = (event) => {
 		let now = new Date().getTime();
 		const from = Buffer.from(this.props.address, 'hex');
     	const to = Buffer.from(this.state.to, 'hex');
-    	const val = parseInt(this.state.value,10)
-   		const value = this._numberToBuffer(val);
+    	const val = this.state.value
+   		const value = Buffer.from(val);
     	const time = this._numberToBuffer(now);
 
     	const hash = keccak('keccak256').update(Buffer.concat([Buffer.from('00', 'hex'), from, to, value, time])).digest();
     	const privateKey = this._decrypt(this.props.privkey, this.state.passwrd);
+
+
+
     	const signature = secp256k1.sign(hash, Buffer.from(privateKey, 'hex'));
     	const signatureBytes = new Uint8Array(65);
         for (let i = 0; i < 64; i++) {
@@ -84,17 +87,8 @@ _sendTx = (event) => {
         }
         signatureBytes[64] = signature.recovery;
     	const sig = new Buffer(signatureBytes).toString('hex');
-    
-    	
-    	console.log(hash.toString('hex'));
-    	console.log(hash.toString('hex'));
-    	console.log(hash);
-    	console.log(Buffer.from('00', 'hex'));
-    	console.log(from);
-    	console.log(to);
-    	console.log(value);
+    	    
     	console.log(time);
-    	console.log(Buffer.concat([Buffer.from('00', 'hex'), from, to, value, time]));
 
     	fetch('http://127.0.0.1:3500/v1/transactions', {
   			method: 'POST',
@@ -119,12 +113,7 @@ _sendTx = (event) => {
 }
 
 _handleTxResponse = (response) => {
-console.log('please');
-console.log('make');
-console.log('way');
-console.log('for');
-console.log('me');
-	console.log('first');
+
 console.log(response.status);
 console.log(response.humanReadableStatus);
 

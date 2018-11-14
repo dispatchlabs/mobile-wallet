@@ -3,6 +3,7 @@ package com.another;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeConfigPackage(),
             new VectorIconsPackage(),
             new RNFastCryptoPackage(),
             new RandomBytesPackage(),

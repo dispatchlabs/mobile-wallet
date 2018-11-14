@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import crypto from 'react-native-crypto';
 import { Buffer } from 'buffer';
 import secp256k1 from 'secp256k1';
-import HomePage from './HomePage';
+import HomePage,  {saveItem, getItem} from './HomePage';
 import keccak from 'keccak';
 
 
@@ -17,7 +17,7 @@ constructor(props) {
   super(props);
   this.state = {
     passwrd: '',
-    account: '',
+    address: '',
     privkey: '',
   };
 }
@@ -52,16 +52,23 @@ _onPrivKeyTextChanged = (event) => {
     _onSubmit = (event) => {
   		this.setState({ passwrd: event.nativeEvent.text }, function(newState) {
   		const publicKey = secp256k1.publicKeyCreate(Buffer.from(this.state.privkey, 'hex'), false);
-  		this.setState({ account: Buffer.from(this._toAddress(publicKey)).toString('hex') });
-  		var encryptedData = this._encrypt(Buffer.from(this.state.privkey).toString('hex'), this.state.passwrd);
+  		this.setState({ address: Buffer.from(this._toAddress(publicKey)).toString('hex') }, function(newState) {
+  		wallet.nickname = 'wallet1';
+      wallet.address = this.state.address;
+      wallet.privateKey = this._encrypt(this.state.privkey, this.state.passwrd);
+      saveItem(wallet.nickname, wallet);
+      saveItem('defaultWallet', wallet);
   		this.props.navigator.push({
-      	component: HomePage,
-      	navigationBarHidden: true,
-      	title: 'Home',
-      	passProps: { 
-                   account: this.account,
-                   privkey: encryptedData}
+        component: HomePage,
+        navigationBarHidden: true,
+        title: 'Home',
+        passProps: { 
+                   walletName: wallet.nickname,
+                   address: wallet.address,
+                   privkey: wallet.privateKey
+                 }
       });
+      }.bind(this));
   		}.bind(this));
 }
 

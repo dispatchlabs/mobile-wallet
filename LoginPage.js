@@ -5,8 +5,14 @@ import {StyleSheet, NavigatorIOS, View, Button, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import NewWalletPage from './NewWallet';
 import ImportWalletPage from './ImportWallet';
+import HomePage, { saveItem, getItem} from './HomePage';
+
 
 export default class LoginPage extends Component<{}> {
+
+
+componentDidMount(){this._initfunc()};
+
 
 	_haveWalletClicked = () => {
 		this.props.navigator.push({
@@ -14,7 +20,7 @@ export default class LoginPage extends Component<{}> {
 			navigationBarHidden: false,
       		title: 'Import Wallet',
     	});
-	}
+	};
 
 	_dontHaveWalletClicked = () => {
 		this.props.navigator.push({
@@ -22,7 +28,23 @@ export default class LoginPage extends Component<{}> {
 			navigationBarHidden: false,
       		title: 'New Wallet',
     	});
-	}
+	};
+
+async _initfunc(){
+  const defWallet = await getItem('defaultWallet');
+  if (defWallet != 'none') {
+    this.props.navigator.push({
+        component: HomePage,
+        navigationBarHidden: true,
+        title: 'Home',
+        passProps: { 
+                   walletName: defWallet.nickName,
+                   address: defWallet.address,
+                   privkey: defWallet.privateKey}
+      }); 
+  }
+};
+
 
 	 render() {
 	 	return (
