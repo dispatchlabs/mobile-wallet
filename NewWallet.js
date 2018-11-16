@@ -67,7 +67,7 @@ _onSubmit = (event) => {
     wallet.address = this.state.address;
     wallet.privateKey = await this._encrypt(Buffer.from(privateKey).toString('hex'), this.state.passwrd);
   
-    saveItem("wallet.nickname", wallet);
+    saveItem(wallet.nickname, wallet);
     saveItem('defaultWallet', wallet);
     this.props.navigator.push({
       component: HomePage,

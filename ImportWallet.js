@@ -52,10 +52,10 @@ _onPrivKeyTextChanged = (event) => {
     _onSubmit = (event) => {
   		this.setState({ passwrd: event.nativeEvent.text }, function(newState) {
   		const publicKey = secp256k1.publicKeyCreate(Buffer.from(this.state.privkey, 'hex'), false);
-  		this.setState({ address: Buffer.from(this._toAddress(publicKey)).toString('hex') }, function(newState) {
+  		this.setState({ address: Buffer.from(this._toAddress(publicKey)).toString('hex') }, async function(newState) {
   		wallet.nickname = 'wallet1';
       wallet.address = this.state.address;
-      wallet.privateKey = this._encrypt(this.state.privkey, this.state.passwrd);
+      wallet.privateKey = await this._encrypt(this.state.privkey, this.state.passwrd);
       saveItem(wallet.nickname, wallet);
       saveItem('defaultWallet', wallet);
   		this.props.navigator.push({

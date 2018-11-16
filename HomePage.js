@@ -7,6 +7,7 @@ import ImportWalletPage from './ImportWallet';
 import ActionButton from 'react-native-circular-action-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import TransferPage from './Transfer';
+import WalletPage from './Wallets';
 
 export async function saveItem(key, value){
   try {
@@ -35,6 +36,15 @@ export async function getItem(key){
   return item;
 }
 
+export async function deleteItem(key){
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    // Error retrieving data
+    console.log(error.message);
+  }
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Main Class
 export default class HomePage extends Component<{}> {
@@ -58,6 +68,16 @@ _toTransfer = () => {
       component: TransferPage,
       navigationBarHidden: false,
       title: 'Transfer',
+      passProps: { address: this.props.address,
+                   privkey: this.props.privkey}
+      });
+}
+
+_toWallets = () => {
+  this.props.navigator.push({
+      component: WalletPage,
+      navigationBarHidden: false,
+      title: 'Wallets',
       passProps: { address: this.props.address,
                    privkey: this.props.privkey}
       });
@@ -96,11 +116,6 @@ _handleTxsResponse = (response) => {
   this.setState({ txs: response });
 };
 
-_onSearchPressed = () => {
-  const query = urlForQueryAndPage('place_name', this.state.searchString, 1);
-  this._executeQuery(query);
-}
-
 _onPressItem = (index) => {
   console.log("Pressed row: "+index);
 };
@@ -138,7 +153,7 @@ _renderItem = ({item, index}) => (
 	</View>
 
 	<ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
+          <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={this._toWallets}>
             <Icon name="user-secret" style={styles.actionButtonIcon} />
           </ActionButton.Item>
           <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={this._toTransfer}>
