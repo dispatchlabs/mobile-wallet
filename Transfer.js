@@ -7,6 +7,9 @@ import { Buffer } from 'buffer';
 import secp256k1 from 'secp256k1';
 import keccak from 'keccak';
 import crypto from 'react-native-crypto';
+import TransferInfoPage from "./TransferInfo";
+import ErrorPage from "./ErrorPage";
+
 
 
 
@@ -19,6 +22,10 @@ constructor(props) {
     value: '',
     passwrd: '',
     status: '',
+    hash: '',
+    time: '',
+    signature: '',
+    herts: '',
   };
 }
 
@@ -87,8 +94,11 @@ _sendTx = (event) => {
         }
         signatureBytes[64] = signature.recovery;
     	const sig = new Buffer(signatureBytes).toString('hex');
-    	    
-    	console.log(time);
+    	
+       this.setState({ hash: hash });
+       this.setState({ time: now });
+       this.setState({ signature: sig });
+       this.setState({ herts: "0" });
 
     	fetch('http://127.0.0.1:3500/v1/transactions', {
   			method: 'POST',
@@ -113,34 +123,33 @@ _sendTx = (event) => {
 }
 
 _handleTxResponse = (response) => {
-
-console.log(response.status);
-console.log(response.humanReadableStatus);
-
-
-};
-
-_executeBalanceQuery = (query) => {
-  fetch(query)
-  .then(response => response.json())
-  .then(json => this._handleBalanceResponse(json.data))
-  .catch();
-};
-
-_handleBalanceResponse = (response) => {
-  if (response.status == 'status: ok'){
-	this.props.navigator.push({
-      component: TransferPage,
+  if (response.status == "Pending") {
+      this.props.navigator.push({
+      component: TransferInfoPage,
       navigationBarHidden: false,
-      title: 'Transfer',
-      passProps: { address: this.props.address,
-                   privkey: this.props.privkey}
+      title: 'Transfer Info',
+      passProps: { hash: this.state.hash,
+                   from: this.props.address,
+                   to: this.state.to,
+                   value: this.state.value,
+                   time: this.state.time,
+                   signature: this.state.signature,
+                   herts: "0",
+                   status: response.status,
+                 }
       });
-
+  } else {
+    this.props.navigator.push({
+      component: ErrorPage,
+      navigationBarHidden: false,
+      title: 'Wallets',
+      passProps: { status: response.status,
+                   HumanReadableStaus: response.HumanReadableStatus}
+      });
   }
 
-
 };
+ 
 
 render() {
 	 	
@@ -154,6 +163,7 @@ render() {
     				textAlign={'center'}
     				onChange={this._onToChanged}
     				/>
+            <View style={styles.line}/>
 				<TextInput
     				style={styles.searchInput}
     				placeholder='how much'
@@ -161,6 +171,7 @@ render() {
     				textAlign={'center'}
     				onChange={this._onValueChanged}
     				/>
+            <View style={styles.line}/>
     			<TextInput
     				style={styles.searchInput}
     				placeholder='supa secrt passwerd'
@@ -169,6 +180,7 @@ render() {
     				textAlign={'center'}
     				onSubmitEditing={(event) =>  this._sendTx(event)}
     				/>
+            <View style={styles.line}/>
     </View>
 
 </LinearGradient>
@@ -191,5 +203,12 @@ container: {
   wrap: {
   	paddingTop: 100,
   	justifyContent: 'flex-start',
+  },line:{
+    width:"80%",
+    height:1,
+    backgroundColor: "black",
+    alignSelf: 'center',
+    bottom:0,
+    marginTop:5,
   },
   });

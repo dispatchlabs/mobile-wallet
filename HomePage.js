@@ -8,6 +8,15 @@ import ActionButton from 'react-native-circular-action-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import TransferPage from './Transfer';
 import WalletPage from './Wallets';
+import TransferInfoPage from './TransferInfo';
+
+export async function clearAsync(){
+    AsyncStorage.clear();
+};
+
+export async function getKeys(){
+  AsyncStorage.getAllKeys().then(console.log());
+};
 
 export async function saveItem(key, value){
   try {
@@ -22,17 +31,18 @@ export async function saveItem(key, value){
 export async function getItem(key){
   let item;
   try {
-
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
       // We have data!!
       item = JSON.parse(value);
+      return item;
     }
   } catch (error) {
     // Error retrieving data
     item = 'none';
     console.log(error.message);
   }
+  item = 'none';
   return item;
 }
 
@@ -61,7 +71,7 @@ constructor(props) {
 
 componentDidMount(){this._initfunc()};
 
-_keyExtractor = (item, index) => item.hash;
+_keyExtractor = (item, index) => index;
 
 _toTransfer = () => {
 	this.props.navigator.push({
@@ -112,12 +122,36 @@ _executeTxsQuery = (query) => {
 };
 
 _handleTxsResponse = (response) => {
+  console.log(response);
   this.setState({ isLoading: false , message: '' });
   this.setState({ txs: response });
 };
 
 _onPressItem = (index) => {
-  console.log("Pressed row: "+index);
+console.log("space");
+  console.log("space");
+console.log("space");
+console.log("space");
+console.log("space");
+console.log("space");
+console.log("space");
+console.log("space");
+  console.log("space");
+  console.log(index);
+  this.props.navigator.push({
+      component: TransferInfoPage,
+      navigationBarHidden: false,
+      title: 'Transfer Info',
+      passProps: { hash: this.state.txs[index].hash,
+                   from: this.state.txs[index].from,
+                   to: this.state.txs[index].to,
+                   value: this.state.txs[index].value,
+                   time: this.state.txs[index].time,
+                   signature: this.state.txs[index].signature,
+                   herts: "0",
+                   status: this.state.txs[index].receipt.status,
+                 }
+      });
 };
 
 _renderItem = ({item, index}) => (
@@ -174,7 +208,7 @@ _renderItem = ({item, index}) => (
 
 	 class ListItem extends React.PureComponent {
   _onPress = () => {
-    this.props.onPressItem(this.props.item.from);
+    this.props.onPressItem(this.props.index);
   }
 
   render() {

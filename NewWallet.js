@@ -66,9 +66,23 @@ _onSubmit = (event) => {
     wallet.nickname = 'wallet1';
     wallet.address = this.state.address;
     wallet.privateKey = await this._encrypt(Buffer.from(privateKey).toString('hex'), this.state.passwrd);
-  
-    saveItem(wallet.nickname, wallet);
-    saveItem('defaultWallet', wallet);
+    let walletList = await getItem('WalletList');
+    console.log(walletList);
+    console.log(wallet);
+    if (walletList != 'none') {
+       walletList.push(wallet.nickname);
+       deleteItem('WalletList');
+       saveItem('WalletList', walletList);
+    } else {
+      let walletList = [wallet.nickname];
+       await saveItem('WalletList', wallet.nickname);
+       console.log(walletList)
+       await getItem('WalletList');
+       console.log(walletList)
+    }
+      saveItem(wallet.nickname, wallet);
+      saveItem('defaultWallet', wallet);
+      saveItem('WalletList', wallet.nickname);
     this.props.navigator.push({
       component: HomePage,
       navigationBarHidden: true,

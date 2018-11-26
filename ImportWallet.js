@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import crypto from 'react-native-crypto';
 import { Buffer } from 'buffer';
 import secp256k1 from 'secp256k1';
-import HomePage,  {saveItem, getItem} from './HomePage';
+import HomePage,  {saveItem, getItem, deleteItem} from './HomePage';
 import keccak from 'keccak';
 
 
@@ -51,13 +51,24 @@ _onPrivKeyTextChanged = (event) => {
 
     _onSubmit = (event) => {
   		this.setState({ passwrd: event.nativeEvent.text }, function(newState) {
+        let wallet = {
+        nickname: '',
+        address: '',
+        privateKey: '',
+      }; 
   		const publicKey = secp256k1.publicKeyCreate(Buffer.from(this.state.privkey, 'hex'), false);
   		this.setState({ address: Buffer.from(this._toAddress(publicKey)).toString('hex') }, async function(newState) {
   		wallet.nickname = 'wallet1';
       wallet.address = this.state.address;
       wallet.privateKey = await this._encrypt(this.state.privkey, this.state.passwrd);
+      let walletList = await getItem('WalletList');
+      if (walletList != 'none') {
+       walletList.push(wallet.nickname);
+       deleteItem('WalletList');
+      }
       saveItem(wallet.nickname, wallet);
       saveItem('defaultWallet', wallet);
+      saveItem('WalletList', wallet.nickname);
   		this.props.navigator.push({
         component: HomePage,
         navigationBarHidden: true,
