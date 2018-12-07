@@ -1,20 +1,13 @@
 'use strict';
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
 
+import HomePage from './HomePage';
+import LoginPage from './LoginPage';
 import React, {Component} from 'react';
 import {NavigatorIOS, StyleSheet} from 'react-native';
-import LoginPage from './LoginPage';
-import HomePage from './HomePage';
 
 export default class App extends Component<{}> {
   render() {
-     return (
+    return (
       <NavigatorIOS
         style={styles.container}
         navigationBarHidden

@@ -1,17 +1,18 @@
 'use strict'
 
-import React, {Component} from 'react';
-import {AsyncStorage, ActivityIndicator, ScrollView, StyleSheet, FlatList, NavigatorIOS, View, Button, Image,Text, TouchableHighlight} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ImportWalletPage from './ImportWallet';
 import ActionButton from 'react-native-circular-action-menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ImportWalletPage from './ImportWallet';
+import LinearGradient from 'react-native-linear-gradient';
+import React, {Component} from 'react';
+import TransferInfoPage from './TransferInfo';
 import TransferPage from './Transfer';
 import WalletPage from './Wallets';
-import TransferInfoPage from './TransferInfo';
+import {AsyncStorage, ActivityIndicator, ScrollView, StyleSheet, FlatList, NavigatorIOS, View, Button, Image,Text, TouchableHighlight} from 'react-native';
+
 
 export async function clearAsync(){
-    AsyncStorage.clear();
+  AsyncStorage.clear();
 };
 
 export async function getKeys(){
@@ -27,10 +28,9 @@ export async function saveItem(key, value){
   }
 };
 
-
 export async function getItem(key){
   let item;
-  try {
+  try {_
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
       // We have data!!
@@ -59,134 +59,126 @@ export async function deleteItem(key){
 // Main Class
 export default class HomePage extends Component<{}> {
 
-constructor(props) {
-  super(props);
-  this.state = {
-    isLoading: false,
-    message: '',
-    txs: '',
-    balance: 0,
-  };
-}
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      message: '',
+      txs: '',
+      balance: 0,
+    };
+  }
 
-componentDidMount(){this._initfunc()};
+  componentDidMount(){this._initfunc()};
 
-_keyExtractor = (item, index) => index;
+  _keyExtractor = (item, index) => index;
 
-_toTransfer = () => {
-	this.props.navigator.push({
+  _toTransfer = () => {
+    this.props.navigator.push({
       component: TransferPage,
       navigationBarHidden: false,
       title: 'Transfer',
       passProps: { address: this.props.address,
-                   privkey: this.props.privkey}
-      });
-}
+        privkey: this.props.privkey}
+    });
+  }
 
-_toWallets = () => {
-  this.props.navigator.push({
+  _toWallets = () => {
+    this.props.navigator.push({
       component: WalletPage,
       navigationBarHidden: false,
       title: 'Wallets',
       passProps: { address: this.props.address,
-                   privkey: this.props.privkey}
-      });
-}
+        privkey: this.props.privkey}
+    });
+  }
 
-_initfunc(){
-	this._executeTxsQuery('http://127.0.0.1:3500/v1/transactions');
-	this._executeBalanceQuery('http://127.0.0.1:3500/v1/accounts/'+this.props.address); //+this.props.account ce31cdd5938370925e159eba18867b2a696137ae
-}
+  _initfunc(){
+    this._executeTxsQuery('http://127.0.0.1:3509/v1/transactions');
+    this._executeBalanceQuery('http://127.0.0.1:3509/v1/accounts/'+this.props.address); //+this.props.account ce31cdd5938370925e159eba18867b2a696137ae
+  }
 
-_executeBalanceQuery = (query) => {
-  fetch(query)
-  .then(response => response.json())
-  .then(json => this._handleBalanceResponse(json.data))
-  .catch();
-};
+  _executeBalanceQuery = (query) => {
+    fetch(query)
+      .then(response => response.json())
+      .then(json => this._handleBalanceResponse(json.data))
+      .catch();
+  };
 
-_handleBalanceResponse = (response) => {
-  this.setState({ balance: response.balance });
-};
+  _handleBalanceResponse = (response) => {
+    this.setState({ balance: response.balance });
+  };
 
-_executeTxsQuery = (query) => {
-  this.setState({ isLoading: true });
-  fetch(query)
-  .then(response => response.json())
-  .then(json => this._handleTxsResponse(json.data))
-  .catch(error =>
-     this.setState({
-      isLoading: false,
-      message: 'Something bad happened ' + error
-   }));
-};
+  _executeTxsQuery = (query) => {
+    this.setState({ isLoading: true });
+    fetch(query)
+      .then(response => response.json())
+      .then(json => this._handleTxsResponse(json.data))
+      .catch(error =>
+        this.setState({
+          isLoading: false,
+          message: 'Something bad happened ' + error
+        }));
+  };
 
-_handleTxsResponse = (response) => {
-  console.log(response);
-  this.setState({ isLoading: false , message: '' });
-  this.setState({ txs: response });
-};
+  _handleTxsResponse = (response) => {
+    console.log(response);
+    this.setState({ isLoading: false , message: '' });
+    this.setState({ txs: response });
+  };
 
-_onPressItem = (index) => {
-console.log("space");
-  console.log("space");
-console.log("space");
-console.log("space");
-console.log("space");
-console.log("space");
-console.log("space");
-console.log("space");
-  console.log("space");
-  console.log(index);
-  this.props.navigator.push({
+  _onPressItem = (index) => {
+    console.log(index);
+
+    this.props.navigator.push({
       component: TransferInfoPage,
       navigationBarHidden: false,
       title: 'Transfer Info',
       passProps: { hash: this.state.txs[index].hash,
-                   from: this.state.txs[index].from,
-                   to: this.state.txs[index].to,
-                   value: this.state.txs[index].value,
-                   time: this.state.txs[index].time,
-                   signature: this.state.txs[index].signature,
-                   herts: "0",
-                   status: this.state.txs[index].receipt.status,
-                 }
-      });
-};
+        from: this.state.txs[index].from,
+        to: this.state.txs[index].to,
+        value: this.state.txs[index].value,
+        time: this.state.txs[index].time,
+        signature: this.state.txs[index].signature,
+        herts: "0",
+        status: this.state.txs[index].receipt.status,
+      }
+    });
+  };
 
-_renderItem = ({item, index}) => (
-  <ListItem
-    item={item}
-    index={index}
-    onPressItem={this._onPressItem}
-  	/>
-);
+  _renderItem = ({item, index}) => (
+    <ListItem
+      item={item}
+      index={index}
+      onPressItem={this._onPressItem}
+    />
+  );
 
-	 render() {
-	 	const spinner = this.state.isLoading ? <ActivityIndicator size='large'/> : null;
+  render() {
+    const spinner = this.state.isLoading ? <ActivityIndicator size='large'/> : null;
 
-	 	return (
+    return (
 
-	<LinearGradient start={{x: 1, y: 0}} end={{x: 0, y: 1}} colors={['#2C2E8B', '#74298C', '#D2508D']} style={styles.container}>
+      <LinearGradient start={{x: 1, y: 0}} end={{x: 0, y: 1}} colors={['#2C2E8B', '#74298C', '#D2508D']} style={styles.container}>
 
-	<View style={styles.balance}>
-		<Text style={styles.btitle}>{this.props.walletName}</Text>
-		<Text style={styles.balanceText} adjustsFontSizeToFit minimumFontScale={.5} numberOfLines={1}>{this.state.balance}</Text>
-		<View style={styles.line}/>
-	</View>
+        <View style={styles.balance}>
+          <Text style={styles.btitle}>{this.props.walletName}</Text>
+          <Text style={styles.balanceText} adjustsFontSizeToFit minimumFontScale={.5} numberOfLines={1}>{this.state.balance}</Text>
+          <View style={styles.line}/>
+        </View>
 
-	<View style={styles.txList}>
-	{spinner}
-	<Text style={styles.description}>{this.state.message}</Text>
-	 <FlatList
-        data={this.state.txs}
-        keyExtractor={this._keyExtractor}
-        renderItem={this._renderItem}
-        style={styles.txList}
-      />
-	</View>
+        <View style={styles.txList}>
+          {spinner}
+          <Text style={styles.description}>{this.state.message}</Text>
+          <FlatList
+            data={this.state.txs}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderItem}
+            style={styles.txList}
+          />
+        </View>
 
-	<ActionButton buttonColor="rgba(231,76,60,1)">
+        <ActionButton buttonColor="rgba(231,76,60,1)">
           <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={this._toWallets}>
             <Icon name="user-secret" style={styles.actionButtonIcon} />
           </ActionButton.Item>
@@ -197,16 +189,16 @@ _renderItem = ({item, index}) => (
             <Icon name="gear" style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>
-       
-	</LinearGradient>
-	)}
-	 }
+
+      </LinearGradient>
+    )}
+}
 
 
 ////////////////////////////////////////////////////////////////////////
 // List Class
 
-	 class ListItem extends React.PureComponent {
+class ListItem extends React.PureComponent {
   _onPress = () => {
     this.props.onPressItem(this.props.index);
   }
@@ -220,7 +212,7 @@ _renderItem = ({item, index}) => (
         underlayColor='#dddddd'>
         <View>
           <View style={styles.rowContainer}>
-          	<Text style={styles.title}>{item.from} sent {value} to {item.to}</Text>
+            <Text style={styles.title}>{item.from} sent {value} to {item.to}</Text>
           </View>
           <View style={styles.separator}/>
         </View>
@@ -230,14 +222,10 @@ _renderItem = ({item, index}) => (
 }
 
 
-
-
-
-
 ////////////////////////////////////////////////////////////////////////
-// styles 
+// styles
 const styles = StyleSheet.create({
-container: {
+  container: {
     flex: 1,
   },
   actionButtonIcon: {
@@ -246,25 +234,25 @@ container: {
     color: 'white',
   },
   balance: {
-  	height: '20%',
-  	top: '10%',
-  	alignItems: 'stretch',
-  	justifyContent: 'flex-end',
-  	backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    height: '20%',
+    top: '10%',
+    alignItems: 'stretch',
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   balanceText:{
-  	color: 'rgba(0, 0, 0, 0.4)',
-  	textAlignVertical: "center",
+    color: 'rgba(0, 0, 0, 0.4)',
+    textAlignVertical: "center",
     textAlign: "center",
     fontSize: 80,
   },
   line:{
-  	width:"80%",
-  	height:1,
-  	backgroundColor: "black",
-  	alignSelf: 'center',
-  	bottom:0,
-  	marginTop:5,
+    width:"80%",
+    height:1,
+    backgroundColor: "black",
+    alignSelf: 'center',
+    bottom:0,
+    marginTop:5,
   },
   thumb: {
     width: 80,
@@ -292,11 +280,11 @@ container: {
     padding: 10
   },
   txList: {
-  	marginTop:'9%',
-  	height: '70%',
+    marginTop:'9%',
+    height: '70%',
   },
   btitle: {
-	fontSize: 40,
+    fontSize: 40,
     color: 'black',
     textAlign: "center",
   },

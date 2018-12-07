@@ -22,7 +22,7 @@ nvm use 8.3.0
 brew install watchman
 npm install -g react-native-cli
 ./node_modules/.bin/rn-nodeify --hack --install
-react-native run-ios #you only have to do this once
+react-native run-ios # You only have to do this once
 ```
 
 Build and run the project in Xcode
