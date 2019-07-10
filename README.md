@@ -25,10 +25,10 @@ The Ionic DevApp will automatically detect any Ionic projects running on your lo
 
 ## ![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_smartphone_black_24px.svg) Using the App
 1. Login screen: if you have a wallet already you can enter your `private key` to access your wallet, if you do not have a wallet already the app will automatically generate one for you.
-2. Home Screen: from the home screen you can see your balance and your transactions. Tap the menu icon in the upper left to access your wallet information, tap the send icon in the upper right to send tokens.
+2. Home Screen: from the home screen you can see your balance and your transactions. Tap the menu icon in the upper left to access your wallet information, tap the send icon in the upper right to send licenses.
 3. Wallet information: here you can see a list of your wallets. Tapping the plus icon in the upper right will generate a new wallet. Tap the copy button next to your active wallet's address to copy your wallet's information to your device's clipboard.
 
-For testing: if you do not have tokens visit our [Discord](https://discord.gg/xBR2axH) and supply us with your wallet's address and we can send you tokens to use for testing.  If you have any other questions feel free to reach out to us on [Discord](https://discord.gg/xBR2axH)
+For testing: if you do not have licenses visit our [Discord](https://discord.gg/xBR2axH) and supply us with your wallet's address and we can send you licenses to use for testing.  If you have any other questions feel free to reach out to us on [Discord](https://discord.gg/xBR2axH)
 
 ## ![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_info_outline_black_24px.svg) More Information
 The Dispatch Mobile Wallet app is built using the Ionic Framework, for more information on Ionic consult their [documentation](https://ionicframework.com/docs/)![](https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_launch_black_18px.svg)
