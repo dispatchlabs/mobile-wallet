@@ -34,8 +34,9 @@ ion-header .bar-button-default-md, .bar-button-clear-md-default, .bar-button-md-
   font-family: 'Poppins', sans-serif;
 }
 
-ion-content {
+ion-content, ion-content.has-refresher > .scroll-content {
   background-image: linear-gradient(-136deg, #2C2E8B 0%, #74298C 47%, #D2508D 100%);
+  border-top: none;
   color: #FFF;
   font-family: 'Poppins', sans-serif;
   letter-spacing: 0.6px;
@@ -310,4 +311,8 @@ ion-input {
   border-bottom-color: #FFF;
   box-shadow: none;
   color: #FFF !important;
+}
+
+.refresher-refreshing .spinner-ios line, .refresher-refreshing .spinner-ios-small line, .refresher-refreshing .spinner-crescent circle {
+  stroke: #FFF;
 }

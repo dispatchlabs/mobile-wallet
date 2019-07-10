@@ -48,9 +48,10 @@ export class HomePage implements OnInit, OnDestroy {
 
     /**
      *
-     * @param {NavController} navCtrl
-     * @param {Store<AppState>} store
-     * @param {AppService} appService
+     * @param navCtrl
+     * @param store
+     * @param appService
+     * @param inAppBrowser
      */
     constructor(public navCtrl: NavController, private store: Store<AppState>, private appService: AppService, public inAppBrowser: InAppBrowser) {
         this.configState = this.store.select('config');
@@ -116,5 +117,16 @@ export class HomePage implements OnInit, OnDestroy {
      */
     public openLink(url: string) {
         this.inAppBrowser.create(url, '_blank');
+    }
+
+    /**
+     *
+     * @param refresher
+     */
+    public doRefresh(refresher) {
+        setTimeout(() => {
+            this.appService.refreshDefaultAccount();
+            refresher.complete();
+        }, 300);
     }
 }
